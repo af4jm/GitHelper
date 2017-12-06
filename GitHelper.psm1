@@ -2,7 +2,6 @@ using namespace System
 using namespace System.IO
 using namespace System.Management.Automation
 Set-StrictMode -Version Latest
-# https://gist.github.com/af4jm/ccae4c94bdaa4145a8326b07f205f0ab
 
 if (Get-Module -Name 'GetLatest') {
     return
