@@ -5,7 +5,103 @@ SHORT DESCRIPTION
     Helper functions for working with git repositories.
 
 LONG DESCRIPTION
-    A detailed, full description of the subject or purpose of the module.
+    This module can be used as is without dependencies, but to customize it it's
+    recommended to specify the default parent folder for your repositories in
+    profile.ps1.  See the module's README file for details.
+
+Additionally, because of the way git dumps so much of its output to STDERR
+    instead of STDOUT, it's also recommended to add the following if block to
+    profile.ps1 to improve the output display.  Setting that flag to $true
+    switches ErrorView to 'CategoryView' during git operations, and restores
+    its original value upon completion. If it's not defined, it defaults to
+    $false.
+
+    # default [System.IO.Path]::Combine(${env:SYSTEMDRIVE}, 'src')
+    ${global:AF4JMsrcPath} = 'C:\src'
+
+    if ($host.Name -eq 'ConsoleHost') {
+        ${global:AF4JMgitErrors} = $false
+        $PSDefaultParameterValues.Add('Format-Table:AutoSize', $true)
+    } else {
+        ${global:AF4JMgitErrors} = $true
+    }
+
+FUNCTIONS
+    To see what functions are provided by GitHelper, execute the command:
+    Get-Command -Module 'GitHelper' -CommandType Function
+    The current GitHelper functions are listed below:
+
+    Add-TrackingBranch
+        Creates a remote tracking branch in the current git repository.
+
+    Get-GitDir
+        Gets the parent directory of the root of the current git repository.
+
+    Initialize-Repository
+        Initializes the current repository with a "master" branch tracking
+        "origin/master" and an untracked "develop" branch.
+
+    Optimize-Repository
+        Optimize a specified git repository.
+
+    Publish-Develop
+        Rebases 'master' on 'develop' and pushes 'master'.
+
+    Publish-DevelopAlt
+        Rebases 'development' on 'develop' and pushes 'development'.
+
+    Publish-Repository
+        Push to a specified git repository.
+
+    Read-Repository
+        Fetches the current git repository.
+
+    Remove-Branch
+        Drops the specified local branch from the current git repository.
+
+    Reset-RepoCache
+        Resets the cache for the specified repository.
+        WARNING: This will undo all uncommitted changes.
+
+    Set-Repository
+        Sets the current location to the root of the specified repository.
+
+    Switch-GitBranch
+        Sets the current location to the root of the specified repository.
+
+    Sync-Branch
+        Git checkout & rebase branches.
+
+    Sync-Develop
+        Pulls 'master' and rebases 'develop'.
+
+    Sync-DevelopAlt
+        Pulls 'development' and rebases 'develop'.
+
+    Sync-Repository
+        Get latest on a specified git repository.
+
+ALIASES
+    To see what aliases get created by GitHelper, execute the command:
+    Get-Command -Module 'GitHelper' -CommandType Alias
+    The current GitHelper defined aliases are listed below:
+
+    checkout        : alias for GitHelper\Switch-GitBranch function
+    gitdir          : alias for GitHelper\Get-GitDir function
+    gitdrop         : alias for GitHelper\Remove-Branch function
+    gitfix          : alias for GitHelper\Reset-RepoCache function
+    gittrack        : alias for GitHelper\Add-TrackingBranch function
+    Init-Repo       : alias for GitHelper\Init-Repository function
+    Optimize-Repo   : alias for GitHelper\Optimize-Repository function
+    Pub-Repo        : alias for GitHelper\Pub-Repository function
+    pulldev         : alias for GitHelper\Sync-Develop function
+    pulldeva        : alias for GitHelper\Sync-DevelopAlt function
+    pushdev         : alias for GitHelper\Publish-Develop function
+    pushdeva        : alias for GitHelper\Publish-DevelopAlt function
+    Read-Repo       : alias for GitHelper\Read-Repository function
+    repo            : alias for GitHelper\Set-Repository function
+    Set-Repo        : alias for GitHelper\Set-Repository function
+    Sync-Repo       : alias for GitHelper\Sync-Repository function
 
 EXAMPLES
     Sync-Repository -Name 'myRepo' -Path 'C:\src' -Verbose
