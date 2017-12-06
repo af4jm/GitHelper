@@ -1,0 +1,15 @@
+TOPIC
+    about_GitHelpers
+
+SHORT DESCRIPTION
+    Helper functions for working with git repositories.
+
+LONG DESCRIPTION
+    A detailed, full description of the subject or purpose of the module.
+
+EXAMPLES
+    Sync-Repository -Name 'myRepo' -Path 'C:\src' -Verbose
+    Sync-Repo 'myRepo' -Path 'C:\src' -Verbose
+
+KEYWORDS
+    git
