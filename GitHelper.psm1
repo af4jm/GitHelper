@@ -26,7 +26,7 @@ function Initialize-Repository {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('Init-Repo')]
@@ -52,7 +52,7 @@ function Get-GitDir {
         If the current location is in a git repository, the name of the parent folder; otherwise, $null.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('gitdir')]
@@ -84,9 +84,9 @@ function Set-Repository
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
-    [CmdletBinding(DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $false)]
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Set-Repo','repo')]
     PARAM(
         #repository to set current location to
@@ -136,7 +136,7 @@ function Switch-GitBranch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('checkout')]
@@ -154,7 +154,7 @@ function Switch-GitBranch {
     BEGIN {
         $command = "git checkout $(IIf { ${Force} } '--force ' '') `"${Name}`""
         & 'git' @('checkout', '--progress', (IIf { $Force } '--force' $null), $Name) |
-            ForEach-Object -Process { Update-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
     }
 }
 
@@ -169,7 +169,7 @@ function Add-TrackingBranch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('gittrack')]
@@ -195,9 +195,9 @@ function Remove-Branch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
-    [CmdletBinding(PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $false)]
+    [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('gitdrop')]
     PARAM(
         #Name of the local branch to drop.
@@ -206,7 +206,9 @@ function Remove-Branch {
     )
 
     BEGIN {
-        & 'git' @('branch', '-d', $Branch)
+        if ($PSCmdlet.ShouldProcess($Branch, 'git branch -d')) {
+            & 'git' @('branch', '-d', $Branch)
+        }
     }
 }
 
@@ -221,7 +223,7 @@ function Publish-Develop {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('pushdev')]
@@ -256,7 +258,7 @@ function Publish-DevelopAlt {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('pushdeva')]
@@ -291,7 +293,7 @@ function Sync-Develop {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('pulldev')]
@@ -328,7 +330,7 @@ function Sync-DevelopAlt {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('pulldeva')]
@@ -367,7 +369,7 @@ function Read-Repository {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Read-Repo')]
@@ -378,7 +380,7 @@ function Read-Repository {
         if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, 'git fetch --all --tags --prune')) {
             $command = "${gitDir}: git fetch --all --tags --prune"
             & 'git' @('fetch', '--all', '--tags', '--prune', '--progress') |
-                ForEach-Object -Process { Update-GitProgress $PSItem -Verbose:$false }
+                ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
         }
     }
 }
@@ -398,7 +400,7 @@ function Sync-Branch {
         git for-each-ref refs/heads --format="%(refname:short)" --sort=-committerdate | Sync-Branch
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     PARAM(
@@ -413,7 +415,7 @@ function Sync-Branch {
     )
 
     BEGIN {
-        if (($Name -eq $null) -or ($Name.Length -le 0)) {
+        if (($null -eq $Name) -or ($Name.Length -le 0)) {
             $Name = ,((Get-GitStatus).Branch)
         }
 
@@ -464,7 +466,7 @@ function Sync-Repository {
         'AF4JM','AF4JM.NET','AF4JM.projects' | Update-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Sync-Repo')]
@@ -589,7 +591,7 @@ function Optimize-Repository {
         'AF4JM','AF4JM.NET','AF4JM.projects' | Optimize-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Optimize-Repo')]
@@ -648,7 +650,7 @@ function Optimize-Repository {
             }
 
             & 'git' @('gc', '--aggressive') |
-                ForEach-Object -Process { Update-GitProgress $PSItem -Verbose:$false }
+                ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
         }
 
         if ($PassThru) {
@@ -679,7 +681,7 @@ function Publish-Repository {
         'AF4JM','AF4JM.NET','AF4JM.projects' | Publish-Repository
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Pub-Repo')]
@@ -739,7 +741,7 @@ function Publish-Repository {
 
                 $command = "${gitDir}: git push `"origin`""
                 & 'git' @('push', 'origin', '--porcelain') |
-                    ForEach-Object -Process { Update-GitProgress $PSItem -Verbose:$false }
+                    ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
             }
         }
 
@@ -765,9 +767,9 @@ function Reset-RepoCache
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
-    [CmdletBinding(PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $false)]
+    [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('gitfix')]
     PARAM(
         #repositories to reset the cache on
@@ -818,10 +820,14 @@ function Reset-RepoCache
                 }
             }
 
-            & 'git' @('rm', '--cached', '-r', '.')
+            if ($PSCmdlet.ShouldProcess($r, 'git rm --cached -r .')) {
+                & 'git' @('rm', '--cached', '-r', '.')
+            }
 
-            & 'git' @('reset', '--hard') |
-                ForEach-Object -Process { Update-GitProgress $PSItem -Verbose:$false }
+            if ($PSCmdlet.ShouldProcess($r, 'git reset --hard')) {
+                & 'git' @('reset', '--hard') |
+                    ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            }
         }
 
         if ($PassThru) {
@@ -835,7 +841,7 @@ function Reset-RepoCache
 }
 
 
-function Update-GitProgress {
+function Show-GitProgress {
     <#
         .SYNOPSIS
         Updates a progress bar for a git operation.
@@ -847,13 +853,17 @@ function Update-GitProgress {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $false)]
     PARAM(
-        #repositories to get latest on
+        #output from git to parse for progress
         [Parameter(Mandatory = $true, ValueFromPipeline = $false, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = '$PSItem must be specified')]
-        [Object[]]$theItem
+        [Object[]]$theItem,
+
+        #command to display for the progress bar
+        [Parameter()]
+        [String]$command
     )
 
     PROCESS {
