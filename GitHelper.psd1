@@ -15,5 +15,4 @@
     FormatsToProcess = @()
     TypesToProcess = @()
     FileList = @('GitHelper.psd1', 'GitHelper.psm1', 'en-US\about_GitHelper.txt')
-    HelpInfoURI = 'https://github.com/af4jm/GitHelper'
 }
