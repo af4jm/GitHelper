@@ -1,4 +1,5 @@
 # GitHelper
+
 A PowerShell module for working with git.
 
 This module can be used as is without dependencies, but to customize it it's recommended to specify the default parent folder for your repositories in `profile.ps1`.
