@@ -27,6 +27,10 @@ function Initialize-Repository {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('Init-Repo')]
@@ -53,6 +57,10 @@ function Get-GitDir {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('gitdir')]
@@ -85,6 +93,10 @@ function Set-Repository
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Set-Repo','repo')]
@@ -137,6 +149,10 @@ function Switch-GitBranch {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('checkout')]
@@ -170,6 +186,10 @@ function Add-TrackingBranch {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('gittrack')]
@@ -196,6 +216,10 @@ function Remove-Branch {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('gitdrop')]
@@ -224,6 +248,10 @@ function Publish-Develop {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('pushdev')]
@@ -259,6 +287,10 @@ function Publish-DevelopAlt {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('pushdeva')]
@@ -294,6 +326,10 @@ function Sync-Develop {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('pulldev')]
@@ -331,6 +367,10 @@ function Sync-DevelopAlt {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('pulldeva')]
@@ -367,9 +407,17 @@ function Read-Repository {
         You cannot pipe input to this function.
         .OUTPUTS
         Nothing is output from this function.
+        .EXAMPLE
+        Read-Repository -Name 'myRepo'
+        .EXAMPLE
+        'myRepo1','myRepo2','myRepo3' | Read-Repo
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Read-Repo')]
@@ -401,6 +449,10 @@ function Sync-Branch {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     PARAM(
@@ -461,12 +513,16 @@ function Sync-Repository {
         .OUTPUTS
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .EXAMPLE
-        Sync-Repository -Name 'AF4JM'
+        Sync-Repository -Name 'myRepo'
         .EXAMPLE
-        'AF4JM','AF4JM.NET','AF4JM.projects' | Update-Repo
+        'myRepo1','myRepo2','myRepo3' | Sync-Repo
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Sync-Repo')]
@@ -586,12 +642,16 @@ function Optimize-Repository {
         .OUTPUTS
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .EXAMPLE
-        Optimize-Repository -Name 'AF4JM'
+        Optimize-Repository -Name 'myRepo'
         .EXAMPLE
-        'AF4JM','AF4JM.NET','AF4JM.projects' | Optimize-Repo
+        'myRepo1','myRepo2','myRepo3' | Optimize-Repo
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Optimize-Repo')]
@@ -676,12 +736,16 @@ function Publish-Repository {
         .OUTPUTS
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .EXAMPLE
-        Publish-Repository -Name 'AF4JM'
+        Publish-Repository -Name 'myRepo'
         .EXAMPLE
-        'AF4JM','AF4JM.NET','AF4JM.projects' | Publish-Repository
+        'myRepo1','myRepo2','myRepo3' | Pub-Repo
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Pub-Repo')]
@@ -768,6 +832,10 @@ function Reset-RepoCache
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('gitfix')]
@@ -854,6 +922,10 @@ function Show-GitProgress {
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $false)]
     PARAM(
