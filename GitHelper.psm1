@@ -37,11 +37,11 @@ function Initialize-Repository {
     PARAM()
 
     BEGIN {
-        & 'git' @('branch', '--track', 'master', 'origin/master')
-        & 'git' @('branch', '--no-track', 'develop', 'master')
-        #& 'git' @('remote', 'set-head', 'origin', 'master') # fixes the remote having the wrong default branch
-        & 'npm' @('install', '--global-style')
-        & 'nuget' @('restore', '-Recursive', '-NonInteractive')
+        git branch --track 'master' 'origin/master'
+        git branch --no-track 'develop' 'master'
+        #git remote set-head 'origin' 'master' # fixes the remote having the wrong default branch
+        npm install --global-style
+        nuget restore -Recursive -NonInteractive
     }
 }
 
@@ -169,7 +169,7 @@ function Switch-GitBranch {
 
     BEGIN {
         $command = "git checkout $(IIf { ${Force} } '--force ' '') `"${Name}`""
-        & 'git' @('checkout', '--progress', (IIf { $Force } '--force' $null), $Name) |
+        git checkout $(IIf { ${Force} } '--force' $null) $Name 2>&1 |
             ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
     }
 }
@@ -200,7 +200,7 @@ function Add-TrackingBranch {
     )
 
     BEGIN {
-        & 'git' @('branch', '--track', $Branch, "origin/${Branch}")
+        git branch --track `"$Branch`" `"origin/${Branch}`"
     }
 }
 
@@ -231,7 +231,7 @@ function Remove-Branch {
 
     BEGIN {
         if ($PSCmdlet.ShouldProcess($Branch, 'git branch -d')) {
-            & 'git' @('branch', '-d', $Branch)
+            git branch -d `"$Branch`"
         }
     }
 }
@@ -267,8 +267,10 @@ function Publish-Develop {
         if (-not ($branch -eq 'master')) {
             Switch-GitBranch -Name 'master' -Verbose:$false
         }
-        & 'git' @('rebase', 'develop', '--stat')
-        & 'git' @('push')
+        git rebase 'develop' --stat 2>&1 |
+            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+        git push 2>&1 |
+            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
         if (-not ($branch -eq 'master')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -306,8 +308,10 @@ function Publish-DevelopAlt {
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name 'development' -Verbose:$false
         }
-        & 'git' @('rebase', 'develop', '--stat')
-        & 'git' @('push')
+        git rebase 'develop' --stat 2>&1 |
+            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+        git push 2>&1 |
+            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -346,9 +350,11 @@ function Sync-Develop {
             Switch-GitBranch -Name 'master' -Verbose:$false
         }
         Read-Repository
-        & 'git' @('rebase', '--stat')
+        git rebase --stat 2>&1 |
+            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
         Switch-GitBranch 'develop' -Verbose:$false
-        & 'git' @('rebase', 'master', '--stat')
+        git rebase 'master' --stat 2>&1 |
+            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -387,11 +393,14 @@ function Sync-DevelopAlt {
             Switch-GitBranch -Name 'master' -Verbose:$false
         }
         Read-Repository
-        & 'git' @('rebase', '--stat')
+        git rebase --stat 2>&1 |
+            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
         Switch-GitBranch 'development' -Verbose:$false
-        & 'git' @('rebase', '--stat')
+        git rebase --stat 2>&1 |
+            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
         Switch-GitBranch 'develop' -Verbose:$false
-        & 'git' @('rebase', 'development', '--stat')
+        git rebase 'development' --stat 2>&1 |
+            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -427,7 +436,7 @@ function Read-Repository {
         $gitDir = (Get-GitDir)
         if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, 'git fetch --all --tags --prune')) {
             $command = "${gitDir}: git fetch --all --tags --prune"
-            & 'git' @('fetch', '--all', '--tags', '--prune', '--progress') |
+            git fetch --all --tags --prune --progress 2>&1 |
                 ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
         }
     }
@@ -485,7 +494,8 @@ function Sync-Branch {
 
             $gitStatus = (Get-GitStatus)
             if ((($gitStatus.AheadBy -gt 0) -or ($gitStatus.BehindBy -gt 0)) -and $PSCmdlet.ShouldProcess("origin/${refname}", 'git rebase')) {
-                & 'git' @('rebase', '--stat')
+                git rebase --stat 2>&1 |
+                    ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
             }
         }
 
@@ -590,9 +600,9 @@ function Sync-Repository {
             $stashCount = 0
             $shouldUnstash = $false
             if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash save --include-untracked')) {
-                $stashCount = [int]((& 'git' @('stash', 'list')) | Measure-Object -Verbose:$false).Count
-                & 'git' @('stash', 'save', '--include-untracked')
-                if (([int]((& 'git' @('stash', 'list')) | Measure-Object -Verbose:$false).Count) -gt $stashCount) {
+                $stashCount = [int](git stash list | Measure-Object -Verbose:$false).Count
+                git stash save --include-untracked
+                if (([int](git stash list | Measure-Object -Verbose:$false).Count) -gt $stashCount) {
                     $shouldUnstash = $true
                 }
             }
@@ -601,7 +611,7 @@ function Sync-Repository {
             Read-Repository -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
 
             # get all local branches, filter down to remote tracking branches, short name only, call Sync-Branch
-            & 'git' @('for-each-ref', 'refs/heads', '--format="%(refname:short)~%(upstream)"', '--sort=committerdate') |
+            git for-each-ref 'refs/heads' --format="%(refname:short)~%(upstream)" --sort="committerdate" |
                 Where-Object -FilterScript { $PSItem.split("~")[1].Length -gt 0 } |
                 ForEach-Object -Process { $PSItem.split('~')[0] } |
                 Sync-Branch -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
@@ -613,7 +623,7 @@ function Sync-Repository {
             if ((-not $Reset) -and $shouldUnstash) {
                 Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash pop`"."
             } elseif ($shouldUnstash -and $PSCmdlet.ShouldProcess($branch, 'git stash pop')) {
-                & 'git' @('stash', 'pop')
+                git stash pop
             }
         }
 
@@ -709,7 +719,7 @@ function Optimize-Repository {
                 }
             }
 
-            & 'git' @('gc', '--aggressive') |
+            git gc --aggressive 2>&1 |
                 ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
         }
 
@@ -799,12 +809,12 @@ function Publish-Repository {
             }
 
             if ($WhatIfPreference) {
-                & 'git' @('push', 'origin', '--porcelain', '--dry-run')
+                git push 'origin' --porcelain --dry-run
             } elseif ($PSCmdlet.ShouldProcess($r, 'git push "origin"')) {
                 $gitDir = (Get-GitDir)
 
                 $command = "${gitDir}: git push `"origin`""
-                & 'git' @('push', 'origin', '--porcelain') |
+                git push 'origin' --porcelain 2>&1 |
                     ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
             }
         }
@@ -889,11 +899,11 @@ function Reset-RepoCache
             }
 
             if ($PSCmdlet.ShouldProcess($r, 'git rm --cached -r .')) {
-                & 'git' @('rm', '--cached', '-r', '.')
+                git rm --cached -r .
             }
 
             if ($PSCmdlet.ShouldProcess($r, 'git reset --hard')) {
-                & 'git' @('reset', '--hard') |
+                git reset --hard 2>&1 |
                     ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
             }
         }
