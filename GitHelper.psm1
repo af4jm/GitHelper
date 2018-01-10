@@ -11,7 +11,7 @@ if (-not (Test-Path -Path 'variable:\global:AF4JMgitErrors')) {
     Set-Variable -Name 'AF4JMgitErrors' -Value $false -Scope 'Global'
 }
 
-if (-not $AF4JMsrcPath) {
+if (-not (Test-Path -Path 'variable:\global:AF4JMsrcPath')) {
     Set-Variable -Name 'AF4JMsrcPath' -Value ([Path]::Combine(${env:SYSTEMDRIVE}, 'src')) -Scope 'Global'
 }
 
@@ -168,8 +168,8 @@ function Switch-GitBranch {
     )
 
     BEGIN {
-        $command = "git checkout $(IIf { ${Force} } '--force ' '') `"${Name}`""
-        git checkout $(IIf { ${Force} } '--force' $null) $Name 2>&1 |
+        $command = "git checkout $(IIf { $Force } '--force ' '') `"${Name}`""
+        git checkout $(IIf { $Force } '--force' $null) $Name 2>&1 |
             ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
     }
 }
@@ -200,7 +200,7 @@ function Add-TrackingBranch {
     )
 
     BEGIN {
-        git branch --track `"$Branch`" `"origin/${Branch}`"
+        git branch --track `"${Branch}`" `"origin/${Branch}`"
     }
 }
 
