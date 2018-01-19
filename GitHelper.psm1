@@ -641,6 +641,129 @@ function Sync-Repository {
 }
 
 
+function Sync-Develop {
+    <#
+        .SYNOPSIS
+        Syncs 'develop' branch to 'master' branch on a specified git repository.
+        .INPUTS
+        The repository name.
+        .OUTPUTS
+        Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
+        .EXAMPLE
+        Sync-Develop -Name 'myRepo'
+        .EXAMPLE
+        'myRepo1','myRepo2','myRepo3' | Sync-Dev
+        .NOTES
+        Author: John Meyer, AF4JM
+        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
+    #>
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [Alias('Sync-Dev')]
+    PARAM(
+        #repositories to get latest on
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
+        [ValidateNotNullOrEmpty()]
+        [Alias('RepositoryName', 'RepoName')]
+        [String[]]$Name,
+
+        #path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        [Parameter(ParameterSetName = 'Path')]
+        [Alias('PSPath')]
+        [String]$Path = $null,
+
+        #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        [Parameter(ParameterSetName = 'LiteralPath')]
+        [String]$LiteralPath = $null,
+
+        #switch which when specified indicates that current changes should be reset instead of stashed before getting latest and popped when done
+        [Parameter()]
+        [Alias('r')]
+        [Switch]$Reset,
+
+        #Indicates whether the output of this function should be the function input or nothing.
+        [Parameter()]
+        [Switch]$PassThru
+    )
+
+    BEGIN {
+        $ThePath = $AF4JMsrcPath
+        switch ($PSCmdlet.ParameterSetName) {
+            'Path' {
+                if ($Path) {
+                    $ThePath = $Path
+                }
+            }
+            'LiteralPath' {
+                if ($LiteralPath) {
+                    $ThePath = $LiteralPath
+                }
+            }
+        }
+
+        Push-Location
+        if ($AF4JMgitErrors) {
+            ${local:ErrorView} = ${global:ErrorView}
+            ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
+        }
+    }
+
+    PROCESS {
+        foreach ($r in $Name) {
+            switch ($PSCmdlet.ParameterSetName) {
+                'Path' {
+                    Set-Location -Path ([Path]::Combine($ThePath, $r))
+                }
+                'LiteralPath' {
+                    Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                }
+            }
+
+            $branch = (Get-GitStatus -Verbose:$false).Branch
+
+            $stashCount = 0
+            $shouldUnstash = $false
+            if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash save --include-untracked')) {
+                $stashCount = [int](git stash list | Measure-Object -Verbose:$false).Count
+                git stash save --include-untracked
+                if (([int](git stash list | Measure-Object -Verbose:$false).Count) -gt $stashCount) {
+                    $shouldUnstash = $true
+                }
+            }
+
+            if (-not ($branch -eq 'develop')) {
+                Switch-GitBranch -Name 'develop' -Verbose:$false
+            }
+            git rebase 'master' --stat 2>&1 |
+                ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            if (-not ($branch -eq 'develop')) {
+                Switch-GitBranch -Name $branch -Verbose:$false
+            }
+
+            if ((-not $Reset) -and $shouldUnstash) {
+                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash pop`"."
+            } elseif ($shouldUnstash -and $PSCmdlet.ShouldProcess($branch, 'git stash pop')) {
+                git stash pop
+            }
+        }
+
+        if ($PassThru) {
+            $PSItem
+        }
+    }
+
+    END {
+        Pop-Location
+        if ($global:AF4JMgitErrors) {
+            $global:ErrorView = $local:ErrorView
+        }
+    }
+}
+
+
 function Optimize-Repository {
     <#
         .SYNOPSIS
