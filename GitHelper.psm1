@@ -970,7 +970,7 @@ function Reset-RepoCache
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('gitfix')]
     PARAM(
         #repositories to reset the cache on
