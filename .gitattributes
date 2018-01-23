@@ -1,0 +1,5 @@
+*.md diff eol=auto text
+*.ps1 diff eol=auto text
+*.psd1 diff eol=auto text
+*.psm1 diff eol=auto text
+*.txt diff eol=auto text
