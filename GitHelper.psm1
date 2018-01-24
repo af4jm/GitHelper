@@ -170,7 +170,7 @@ function Switch-GitBranch {
     BEGIN {
         $command = "git checkout $(IIf { $Force } '--force ' '') `"${Name}`""
         git checkout $(IIf { $Force } '--force' $null) $Name 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command $command -Verbose:$false }
     }
 }
 
@@ -268,9 +268,9 @@ function Publish-Develop {
             Switch-GitBranch -Name 'master' -Verbose:$false
         }
         git rebase 'develop' --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "develop"' -Verbose:$false }
         git push 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git push' -Verbose:$false }
         if (-not ($branch -eq 'master')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -309,9 +309,9 @@ function Publish-DevelopAlt {
             Switch-GitBranch -Name 'development' -Verbose:$false
         }
         git rebase 'develop' --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "develop"' -Verbose:$false }
         git push 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git push' -Verbose:$false }
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -351,10 +351,10 @@ function Sync-Develop {
         }
         Read-Repository
         git rebase --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
         Switch-GitBranch 'develop' -Verbose:$false
         git rebase 'master' --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "master"' -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -394,13 +394,13 @@ function Sync-DevelopAlt {
         }
         Read-Repository
         git rebase --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
         Switch-GitBranch 'development' -Verbose:$false
         git rebase --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
         Switch-GitBranch 'develop' -Verbose:$false
         git rebase 'development' --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "development"' -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -437,7 +437,7 @@ function Read-Repository {
         if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, 'git fetch --all --tags --prune')) {
             $command = "${gitDir}: git fetch --all --tags --prune"
             git fetch --all --tags --prune --progress 2>&1 |
-                ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
+                ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command $command -Verbose:$false }
         }
     }
 }
@@ -495,7 +495,7 @@ function Sync-Branch {
             $gitStatus = (Get-GitStatus)
             if ((($gitStatus.AheadBy -gt 0) -or ($gitStatus.BehindBy -gt 0)) -and $PSCmdlet.ShouldProcess("origin/${refname}", 'git rebase')) {
                 git rebase --stat 2>&1 |
-                    ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+                    ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
             }
         }
 
@@ -738,7 +738,7 @@ function Sync-Develop {
                 Switch-GitBranch -Name 'develop' -Verbose:$false
             }
             git rebase 'master' --stat 2>&1 |
-                ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+                ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "master"' -Verbose:$false }
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
             }
@@ -843,7 +843,7 @@ function Optimize-Repository {
             }
 
             git gc --aggressive 2>&1 |
-                ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+                ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git gc --aggressive' -Verbose:$false }
         }
 
         if ($PassThru) {
@@ -938,7 +938,7 @@ function Publish-Repository {
 
                 $command = "${gitDir}: git push `"origin`""
                 git push 'origin' --porcelain 2>&1 |
-                    ForEach-Object -Process { Show-GitProgress $PSItem -command $command -Verbose:$false }
+                    ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command $command -Verbose:$false }
             }
         }
 
@@ -1027,7 +1027,7 @@ function Reset-RepoCache
 
             if ($PSCmdlet.ShouldProcess($r, 'git reset --hard')) {
                 git reset --hard 2>&1 |
-                    ForEach-Object -Process { Show-GitProgress $PSItem -Verbose:$false }
+                    ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git reset --hard' -Verbose:$false }
             }
         }
 
