@@ -352,7 +352,7 @@ function Sync-Develop {
         Read-Repository
         git rebase --stat 2>&1 |
             ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
-        Switch-GitBranch 'develop' -Verbose:$false
+        Switch-GitBranch -Name 'develop' -Verbose:$false
         git rebase 'master' --stat 2>&1 |
             ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "master"' -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
@@ -395,10 +395,10 @@ function Sync-DevelopAlt {
         Read-Repository
         git rebase --stat 2>&1 |
             ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
-        Switch-GitBranch 'development' -Verbose:$false
+        Switch-GitBranch -Name 'development' -Verbose:$false
         git rebase --stat 2>&1 |
             ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
-        Switch-GitBranch 'develop' -Verbose:$false
+        Switch-GitBranch -Name 'develop' -Verbose:$false
         git rebase 'development' --stat 2>&1 |
             ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "development"' -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
@@ -641,7 +641,7 @@ function Sync-Repository {
 }
 
 
-function Sync-Develop {
+function Sync-DevelopBranch {
     <#
         .SYNOPSIS
         Syncs 'develop' branch to 'master' branch on a specified git repository.
