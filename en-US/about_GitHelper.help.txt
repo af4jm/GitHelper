@@ -70,13 +70,16 @@ FUNCTIONS
         Sets the current location to the root of the specified repository.
 
     Sync-Branch
-        Git checkout & rebase branches.
+        Git checkout & rebase the current or specified branch.
 
     Sync-Develop
-        Pulls 'master' and rebases 'develop'.
+        Pulls 'master' and rebases 'develop' in the current git repository.
 
     Sync-DevelopAlt
-        Pulls 'development' and rebases 'develop'.
+        Pulls 'development' and rebases 'develop' in the current git repository.
+
+    Sync-DevelopBranch
+        Syncs 'develop' branch to 'master' branch on a specified git repository.
 
     Sync-Repository
         Get latest on a specified git repository.

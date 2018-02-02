@@ -446,7 +446,7 @@ function Read-Repository {
 function Sync-Branch {
     <#
         .SYNOPSIS
-        Git checkout & rebase branches.
+        Git checkout & rebase the current or specified branch.
         .DESCRIPTION
         Checks out the local tracking branch and rebases it on the origin branch of the same name, for each branch specified, assumes the current directory is in the git repository.
         .INPUTS
@@ -645,6 +645,8 @@ function Sync-DevelopBranch {
     <#
         .SYNOPSIS
         Syncs 'develop' branch to 'master' branch on a specified git repository.
+        .DESCRIPTION
+        Intended to be run immediately after Read-Repository.  Read-Repository updates any and all tracking branches, this function rebases "develop" on "master".
         .INPUTS
         The repository name.
         .OUTPUTS
