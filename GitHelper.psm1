@@ -170,7 +170,7 @@ function Switch-GitBranch {
     BEGIN {
         $command = "git checkout $(IIf { $Force } '--force ' '') `"${Name}`""
         git checkout $(IIf { $Force } '--force' $null) $Name 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command $command -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 1 -command $command -theItem $PSItem -Verbose:$false }
     }
 }
 
@@ -200,7 +200,7 @@ function Add-TrackingBranch {
     )
 
     BEGIN {
-        git branch --track `"${Branch}`" `"origin/${Branch}`"
+        git branch --track $Branch "origin/${Branch}"
     }
 }
 
@@ -231,7 +231,7 @@ function Remove-Branch {
 
     BEGIN {
         if ($PSCmdlet.ShouldProcess($Branch, 'git branch -d')) {
-            git branch -d `"$Branch`"
+            git branch -d $Branch
         }
     }
 }
@@ -268,9 +268,9 @@ function Publish-Develop {
             Switch-GitBranch -Name 'master' -Verbose:$false
         }
         git rebase 'develop' --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "develop"' -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 2 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
         git push 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git push' -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 3 -command 'git push' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'master')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -309,9 +309,9 @@ function Publish-DevelopAlt {
             Switch-GitBranch -Name 'development' -Verbose:$false
         }
         git rebase 'develop' --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "develop"' -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 2 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
         git push 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git push' -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 3 -command 'git push' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -351,10 +351,10 @@ function Sync-Develop {
         }
         Read-Repository
         git rebase --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 4 -command 'git rebase' -theItem $PSItem -Verbose:$false }
         Switch-GitBranch -Name 'develop' -Verbose:$false
         git rebase 'master' --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "master"' -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 5 -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -394,13 +394,13 @@ function Sync-DevelopAlt {
         }
         Read-Repository
         git rebase --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 6 -command 'git rebase' -theItem $PSItem -Verbose:$false }
         Switch-GitBranch -Name 'development' -Verbose:$false
         git rebase --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 7 -command 'git rebase' -theItem $PSItem -Verbose:$false }
         Switch-GitBranch -Name 'develop' -Verbose:$false
         git rebase 'development' --stat 2>&1 |
-            ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "development"' -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 8 -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -437,7 +437,7 @@ function Read-Repository {
         if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, 'git fetch --all --tags --prune')) {
             $command = "${gitDir}: git fetch --all --tags --prune"
             git fetch --all --tags --prune --progress 2>&1 |
-                ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command $command -Verbose:$false }
+                ForEach-Object -Process { Show-GitProgress -Id 9 -command $command -theItem $PSItem -Verbose:$false }
         }
     }
 }
@@ -495,7 +495,7 @@ function Sync-Branch {
             $gitStatus = (Get-GitStatus)
             if ((($gitStatus.AheadBy -gt 0) -or ($gitStatus.BehindBy -gt 0)) -and $PSCmdlet.ShouldProcess("origin/${refname}", 'git rebase')) {
                 git rebase --stat 2>&1 |
-                    ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase' -Verbose:$false }
+                    ForEach-Object -Process { Show-GitProgress -Id 10 -command 'git rebase' -theItem $PSItem -Verbose:$false }
             }
         }
 
@@ -711,10 +711,13 @@ function Sync-DevelopBranch {
             ${local:ErrorView} = ${global:ErrorView}
             ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
+
+        $Id = 12
     }
 
     PROCESS {
         foreach ($r in $Name) {
+            $Id += 1
             switch ($PSCmdlet.ParameterSetName) {
                 'Path' {
                     Set-Location -Path ([Path]::Combine($ThePath, $r))
@@ -740,7 +743,7 @@ function Sync-DevelopBranch {
                 Switch-GitBranch -Name 'develop' -Verbose:$false
             }
             git rebase 'master' --stat 2>&1 |
-                ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git rebase "master"' -Verbose:$false }
+                ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
             }
@@ -831,10 +834,13 @@ function Optimize-Repository {
             ${local:ErrorView} = ${global:ErrorView}
             ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
+
+        $Id = 34
     }
 
     PROCESS {
         foreach ($r in $Name) {
+            $Id += 1
             switch ($PSCmdlet.ParameterSetName) {
                 'Path' {
                     Set-Location -Path ([Path]::Combine($ThePath, $r))
@@ -845,7 +851,7 @@ function Optimize-Repository {
             }
 
             git gc --aggressive 2>&1 |
-                ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git gc --aggressive' -Verbose:$false }
+                ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git gc --aggressive' -theItem $PSItem -Verbose:$false }
         }
 
         if ($PassThru) {
@@ -920,10 +926,12 @@ function Publish-Repository {
         }
 
         Push-Location
+        $Id = 56
     }
 
     PROCESS {
         foreach ($r in $Name) {
+            $Id += 1
             switch ($PSCmdlet.ParameterSetName) {
                 'Path' {
                     Set-Location -Path ([Path]::Combine($ThePath, $r))
@@ -940,7 +948,7 @@ function Publish-Repository {
 
                 $command = "${gitDir}: git push `"origin`""
                 git push 'origin' --porcelain 2>&1 |
-                    ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command $command -Verbose:$false }
+                    ForEach-Object -Process { Show-GitProgress -Id $Id -command $command -theItem $PSItem -Verbose:$false }
             }
         }
 
@@ -1010,10 +1018,12 @@ function Reset-RepoCache
         }
 
         Push-Location
+        $Id = 78
     }
 
     PROCESS {
         foreach ($r in $Name) {
+            $Id += 1
             switch ($PSCmdlet.ParameterSetName) {
                 'Path' {
                     Set-Location -Path ([Path]::Combine($ThePath, $r))
@@ -1029,7 +1039,7 @@ function Reset-RepoCache
 
             if ($PSCmdlet.ShouldProcess($r, 'git reset --hard')) {
                 git reset --hard 2>&1 |
-                    ForEach-Object -Process { Show-GitProgress -theItem $PSItem -command 'git reset --hard' -Verbose:$false }
+                    ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git reset --hard' -theItem $PSItem -Verbose:$false }
             }
         }
 
@@ -1070,27 +1080,31 @@ function Show-GitProgress {
 
         #command to display for the progress bar
         [Parameter()]
-        [String]$command
+        [String]$command,
+
+        #command to display for the progress bar
+        [Parameter()]
+        [Int]$Id = 0
     )
 
     PROCESS {
         foreach ($i in $theItem) {
             $item = $i.ToString()
             $parsed = $item -split { $PSItem -eq '(' -or $PSItem -eq '/' -or $PSItem -eq ')' }
-            if ($parsed.Length -ne 4) {
+            if ($item.Contains('done') -or $item.Contains('complete')) {
+                Write-Progress -Id $Id -ParentId -1 -Activity $command -SecondsRemaining 0 -PercentComplete 100
+                Write-Progress -Id $Id -ParentId -1 -Activity $command -SecondsRemaining -1 -PercentComplete -1 -Complete:$true
                 Write-Output -InputObject $item
-            } elseif ($item.Contains('done') -or $item.Contains('complete')) {
-                Write-Progress -Id 0 -ParentId -1 -Activity $command -SecondsRemaining 0 -PercentComplete 100
-                Write-Progress -Id 0 -ParentId -1 -Activity $command -SecondsRemaining -1 -PercentComplete -1 -Complete
-                Write-Output -InputObject $item
-            } else {
+            } elseif ($parsed.Length -eq 4) {
                 try { # calculate the %
                     $pct = [int]((([int]$parsed[1]) / ([int]$parsed[2])) * 100)
                     $progress = $item -split ':',2
-                    Write-Progress -Id 0 -ParentId -1 -Activity $command -CurrentOperation $progress[0] -Status $progress[1] -SecondsRemaining -1 -PercentComplete $pct
+                    Write-Progress -Id $Id -ParentId -1 -Activity $command -CurrentOperation $progress[0] -Status $progress[1] -SecondsRemaining -1 -PercentComplete $pct
                 } catch { # calculation failed, just display the message
                     Write-Output -InputObject $item
                 }
+            } else {
+                Write-Output -InputObject $item
             }
         }
     }
