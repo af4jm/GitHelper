@@ -319,7 +319,7 @@ function Publish-DevelopAlt {
 }
 
 
-function Sync-Develop {
+function Update-Develop {
     <#
         .SYNOPSIS
         Pulls 'master' and rebases 'develop'.
@@ -362,7 +362,7 @@ function Sync-Develop {
 }
 
 
-function Sync-DevelopAlt {
+function Update-DevelopAlt {
     <#
         .SYNOPSIS
         Pulls 'development' and rebases 'develop'.
@@ -443,7 +443,7 @@ function Read-Repository {
 }
 
 
-function Sync-Branch {
+function Update-Branch {
     <#
         .SYNOPSIS
         Git checkout & rebase the current or specified branch.
@@ -454,7 +454,7 @@ function Sync-Branch {
         .OUTPUTS
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .EXAMPLE
-        git for-each-ref refs/heads --format="%(refname:short)" --sort=-committerdate | Sync-Branch
+        git for-each-ref refs/heads --format="%(refname:short)" --sort=-committerdate | Update-Branch
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
@@ -512,7 +512,7 @@ function Sync-Branch {
 }
 
 
-function Sync-Repository {
+function Update-Repository {
     <#
         .SYNOPSIS
         Get latest on a specified git repository.
@@ -523,7 +523,7 @@ function Sync-Repository {
         .OUTPUTS
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .EXAMPLE
-        Sync-Repository -Name 'myRepo'
+        Update-Repository -Name 'myRepo'
         .EXAMPLE
         'myRepo1','myRepo2','myRepo3' | Sync-Repo
         .NOTES
@@ -610,11 +610,11 @@ function Sync-Repository {
             # shouldn't have to pass Verbose, but if I don't it doesn't work
             Read-Repository -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
 
-            # get all local branches, filter down to remote tracking branches, short name only, call Sync-Branch
+            # get all local branches, filter down to remote tracking branches, short name only, call Update-Branch
             git for-each-ref 'refs/heads' --format="%(refname:short)~%(upstream)" --sort="committerdate" |
                 Where-Object -FilterScript { $PSItem.split("~")[1].Length -gt 0 } |
                 ForEach-Object -Process { $PSItem.split('~')[0] } |
-                Sync-Branch -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
+                Update-Branch -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
 
             if (((Get-GitStatus -Verbose:$false).Branch -ne $branch) -and $PSCmdlet.ShouldProcess($branch, 'git checkout --force')) {
                 Switch-GitBranch -Name $branch -Force -Verbose:$false
@@ -641,7 +641,7 @@ function Sync-Repository {
 }
 
 
-function Sync-DevelopBranch {
+function Update-DevelopBranch {
     <#
         .SYNOPSIS
         Syncs 'develop' branch to 'master' branch on a specified git repository.
@@ -652,7 +652,7 @@ function Sync-DevelopBranch {
         .OUTPUTS
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .EXAMPLE
-        Sync-Develop -Name 'myRepo'
+        Update-Develop -Name 'myRepo'
         .EXAMPLE
         'myRepo1','myRepo2','myRepo3' | Sync-Dev
         .NOTES

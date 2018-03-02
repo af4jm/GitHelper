@@ -2,6 +2,13 @@
 
 A PowerShell module for working with git.  Install free from the [PowerShell Gallery](https://www.powershellgallery.com/packages/GitHelper/)
 
+Because PowerShell only approves certain verbs, the following mapping is used...
+
+* fetch --> Read
+* pull --> Update
+* push --> Publish
+* pull & push --> Sync
+
 This module can be used as is without dependencies, but to customize it it's recommended to specify the default parent folder for your repositories in `profile.ps1`.
 
 Additionally, because of the way git dumps so much of its output to `STDERR` instead of `STDOUT` which causes many hosts to raise exceptions, it's also recommended to add the following if block to `profile.ps1` to improve the output display.  Setting that flag to `$true` switches `ErrorView` to `'CategoryView'` during git operations, and restores its original value upon completion. If it's not defined, it defaults to `$false`.  I've included my username in the setting simply to avoid conflicting with any other globals that may be defined elsewhere.
@@ -16,10 +23,10 @@ if ($host.Name -eq 'ConsoleHost') {
 }
 ```
 
-Suggested usage (in a .ps1 file that gets . sourced from profile)
+Suggested usage (in a .ps1 file that gets . sourced from profile, the alias "gall" is a contraction of "get all")...
 
 ```powershell
-function Get-MyRepos
+function Update-MyRepos
 {
     <#
         .SYNOPSIS
@@ -48,7 +55,7 @@ function Get-MyRepos
     )
 
     BEGIN {
-        Sync-Repository -Name 'myRepo1','myRepo2','myRepo3' -Path $Path -LiteralPath $LiteralPath -Verbose
+        Update-Repository -Name 'myRepo1','myRepo2','myRepo3' -Path $Path -LiteralPath $LiteralPath -Verbose
     }
 }
 ```
