@@ -4,10 +4,10 @@ A PowerShell module for working with git.  Install free from the [PowerShell Gal
 
 Because PowerShell only approves certain verbs, the following mapping is used...
 
-* fetch --> Read
-* pull --> Update
-* push --> Publish
-* pull & push --> Sync
+* fetch → Read
+* pull → Update
+* push → Publish
+* pull & push → Sync
 
 This module can be used as is without dependencies, but to customize it it's recommended to specify the default parent folder for your repositories in `profile.ps1`.
 
