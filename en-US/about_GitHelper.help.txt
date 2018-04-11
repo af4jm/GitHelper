@@ -32,35 +32,35 @@ FUNCTIONS
     The current GitHelper functions are listed below:
 
     Add-TrackingBranch
-        Creates a remote tracking branch in the current git repository.
+        Create a remote tracking branch in the current git repository.
 
     Get-GitDir
-        Gets the parent directory of the root of the current git repository.
+        Get the parent directory of the root of the current git repository.
 
     Initialize-Repository
-        Initializes the current repository with a "master" branch tracking
+        Initialize the current repository with a "master" branch tracking
         "origin/master" and an untracked "develop" branch.
 
     Optimize-Repository
         Optimize a specified git repository.
 
     Publish-Develop
-        Rebases 'master' on 'develop' and pushes 'master'.
+        Rebase 'master' on 'develop' and push 'master'.
 
     Publish-DevelopAlt
-        Rebases 'development' on 'develop' and pushes 'development'.
+        Rebase 'development' on 'develop' and push 'development'.
 
     Publish-Repository
         Push to a specified git repository.
 
     Read-Repository
-        Fetches the current git repository.
+        Fetch the current git repository.
 
     Remove-Branch
-        Drops the specified local branch from the current git repository.
+        Drop the specified local branch from the current git repository.
 
-    Reset-RepoCache
-        Resets the cache for the specified repository.
+    Reset-RepositoryCache
+        Reset the cache for the specified repository.
         WARNING: This will undo all uncommitted changes.
 
     Set-Repository
@@ -73,13 +73,13 @@ FUNCTIONS
         Git checkout & rebase the current or specified branch.
 
     Sync-Develop
-        Pulls 'master' and rebases 'develop' in the current git repository.
+        Pull 'master' and rebase 'develop' in the current git repository.
 
     Sync-DevelopAlt
-        Pulls 'development' and rebases 'develop' in the current git repository.
+        Pull 'development' and rebase 'develop' in the current git repository.
 
     Sync-DevelopBranch
-        Syncs 'develop' branch to 'master' branch on a specified git repository.
+        Sync 'develop' branch to 'master' branch on a specified git repository.
 
     Sync-Repository
         Get latest on a specified git repository.
@@ -102,8 +102,10 @@ ALIASES
     pushdev         : alias for GitHelper\Publish-Develop function
     pushdeva        : alias for GitHelper\Publish-DevelopAlt function
     Read-Repo       : alias for GitHelper\Read-Repository function
+    Reset-RepoCache : alias for GitHelper\Reset-RepositoryCache function
     repo            : alias for GitHelper\Set-Repository function
     Set-Repo        : alias for GitHelper\Set-Repository function
+    Sync-Dev        : alias for GitHelper\Sync-DevelopBranch function
     Sync-Repo       : alias for GitHelper\Sync-Repository function
 
 EXAMPLES

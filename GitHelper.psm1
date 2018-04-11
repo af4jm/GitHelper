@@ -19,7 +19,7 @@ if (-not (Test-Path -Path 'variable:\global:AF4JMsrcPath')) {
 function Initialize-Repository {
     <#
         .SYNOPSIS
-        Initializes the current repository with a "master" branch tracking "origin/master" and an untracked "develop" branch.
+        Initialize the current repository with a "master" branch tracking "origin/master" and an untracked "develop" branch.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -49,7 +49,7 @@ function Initialize-Repository {
 function Get-GitDir {
     <#
         .SYNOPSIS
-        Gets the parent directory of the root of the current git repository.
+        Get the parent directory of the root of the current git repository.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -85,7 +85,7 @@ function Set-Repository
 {
     <#
         .SYNOPSIS
-        Sets the current location to the root of the specified repository.
+        Set the current location to the root of the specified repository.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -141,7 +141,7 @@ function Set-Repository
 function Switch-GitBranch {
     <#
         .SYNOPSIS
-        Sets the current location to the root of the specified repository.
+        Set the current location to the root of the specified repository.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -178,7 +178,7 @@ function Switch-GitBranch {
 function Add-TrackingBranch {
     <#
         .SYNOPSIS
-        Creates a remote tracking branch in the current git repository.
+        Create a remote tracking branch in the current git repository.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -208,7 +208,7 @@ function Add-TrackingBranch {
 function Remove-Branch {
     <#
         .SYNOPSIS
-        Drops the specified local branch from the current git repository.
+        Drop the specified local branch from the current git repository.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -240,7 +240,7 @@ function Remove-Branch {
 function Publish-Develop {
     <#
         .SYNOPSIS
-        Rebases 'master' on 'develop' and pushes 'master'.
+        Rebase 'master' on 'develop' and push 'master'.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -281,7 +281,7 @@ function Publish-Develop {
 function Publish-DevelopAlt {
     <#
         .SYNOPSIS
-        Rebases 'development' on 'develop' and pushes 'development'.
+        Rebase 'development' on 'develop' and push 'development'.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -322,7 +322,7 @@ function Publish-DevelopAlt {
 function Update-Develop {
     <#
         .SYNOPSIS
-        Pulls 'master' and rebases 'develop'.
+        Pull 'master' and rebase 'develop'.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -365,7 +365,7 @@ function Update-Develop {
 function Update-DevelopAlt {
     <#
         .SYNOPSIS
-        Pulls 'development' and rebases 'develop'.
+        Pull 'development' and rebase 'develop'.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -411,7 +411,7 @@ function Update-DevelopAlt {
 function Read-Repository {
     <#
         .SYNOPSIS
-        Fetches the current git repository.
+        Fetch the current git repository.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -644,7 +644,7 @@ function Update-Repository {
 function Update-DevelopBranch {
     <#
         .SYNOPSIS
-        Syncs 'develop' branch to 'master' branch on a specified git repository.
+        Sync 'develop' branch to 'master' branch on a specified git repository.
         .DESCRIPTION
         Intended to be run immediately after Read-Repository.  Read-Repository updates any and all tracking branches, this function rebases "develop" on "master".
         .INPUTS
@@ -963,11 +963,11 @@ function Publish-Repository {
 }
 
 
-function Reset-RepoCache
+function Reset-RepositoryCache
 {
     <#
         .SYNOPSIS
-        Resets the cache for the specified repository.  WARNING: This will undo all uncommitted changes.
+        Reset the cache for the specified repository.  WARNING: This will undo all uncommitted changes.
         .INPUTS
         The repository name.
         .OUTPUTS
@@ -981,6 +981,7 @@ function Reset-RepoCache
         https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [Alias('Reset-RepoCache')]
     [Alias('gitfix')]
     PARAM(
         #repositories to reset the cache on
@@ -1057,9 +1058,9 @@ function Reset-RepoCache
 function Show-GitProgress {
     <#
         .SYNOPSIS
-        Updates a progress bar for a git operation.
+        Update a progress bar for a git operation.
         .DESCRIPTION
-        Updates a progress bar for a git operation.  Anything not parsable as progress is written to standard output.
+        Update a progress bar for a git operation.  Anything not parsable as progress is written to standard output.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
