@@ -525,7 +525,7 @@ function Update-Repository {
         .EXAMPLE
         Update-Repository -Name 'myRepo'
         .EXAMPLE
-        'myRepo1','myRepo2','myRepo3' | Sync-Repo
+        'myRepo1','myRepo2','myRepo3' | Update-Repo
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
@@ -652,9 +652,9 @@ function Update-DevelopBranch {
         .OUTPUTS
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .EXAMPLE
-        Update-Develop -Name 'myRepo'
+        Update-DevelopBranch -Name 'myRepo'
         .EXAMPLE
-        'myRepo1','myRepo2','myRepo3' | Sync-Dev
+        'myRepo1','myRepo2','myRepo3' | Update-Dev
         .NOTES
         Author: John Meyer, AF4JM
         Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
