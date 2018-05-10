@@ -620,7 +620,7 @@ function Update-Repository {
                 Switch-GitBranch -Name $branch -Force -Verbose:$false
             }
 
-            if ((-not $Reset) -and $shouldUnstash) {
+            if ((-not $Reset) -and (-not $shouldUnstash)) {
                 Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash pop`"."
             } elseif ($shouldUnstash -and $PSCmdlet.ShouldProcess($branch, 'git stash pop')) {
                 git stash pop
@@ -748,7 +748,7 @@ function Update-DevelopBranch {
                 Switch-GitBranch -Name $branch -Verbose:$false
             }
 
-            if ((-not $Reset) -and $shouldUnstash) {
+            if ((-not $Reset) -and (-not $shouldUnstash)) {
                 Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash pop`"."
             } elseif ($shouldUnstash -and $PSCmdlet.ShouldProcess($branch, 'git stash pop')) {
                 git stash pop
