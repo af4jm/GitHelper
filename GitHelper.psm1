@@ -597,14 +597,8 @@ function Update-Repository {
 
             $branch = (Get-GitStatus -Verbose:$false).Branch
 
-            $stashCount = 0
-            $shouldUnstash = $false
-            if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash save --include-untracked')) {
-                $stashCount = [int](git stash list | Measure-Object -Verbose:$false).Count
-                git stash save --include-untracked
-                if (([int](git stash list | Measure-Object -Verbose:$false).Count) -gt $stashCount) {
-                    $shouldUnstash = $true
-                }
+            if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
+                $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
             }
 
             # shouldn't have to pass Verbose, but if I don't it doesn't work
@@ -620,10 +614,10 @@ function Update-Repository {
                 Switch-GitBranch -Name $branch -Force -Verbose:$false
             }
 
-            if ((-not $Reset) -and (-not $shouldUnstash)) {
-                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash pop`"."
-            } elseif ($shouldUnstash -and $PSCmdlet.ShouldProcess($branch, 'git stash pop')) {
-                git stash pop
+            if ((-not $Reset) -and (-not $stashRef)) {
+                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
+            } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply `"${stashRef}`"")) {
+                git stash apply $stashRef
             }
         }
 
@@ -729,14 +723,8 @@ function Update-DevelopBranch {
 
             $branch = (Get-GitStatus -Verbose:$false).Branch
 
-            $stashCount = 0
-            $shouldUnstash = $false
-            if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash save --include-untracked')) {
-                $stashCount = [int](git stash list | Measure-Object -Verbose:$false).Count
-                git stash save --include-untracked
-                if (([int](git stash list | Measure-Object -Verbose:$false).Count) -gt $stashCount) {
-                    $shouldUnstash = $true
-                }
+            if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
+                $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
             }
 
             if (-not ($branch -eq 'develop')) {
@@ -748,10 +736,10 @@ function Update-DevelopBranch {
                 Switch-GitBranch -Name $branch -Verbose:$false
             }
 
-            if ((-not $Reset) -and (-not $shouldUnstash)) {
-                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash pop`"."
-            } elseif ($shouldUnstash -and $PSCmdlet.ShouldProcess($branch, 'git stash pop')) {
-                git stash pop
+            if ((-not $Reset) -and (-not $stashRef)) {
+                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
+            } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply `"${stashRef}`"")) {
+                git stash apply $stashRef
             }
         }
 
