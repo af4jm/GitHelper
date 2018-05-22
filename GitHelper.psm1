@@ -169,7 +169,7 @@ function Switch-GitBranch {
 
     BEGIN {
         $command = "git checkout $(IIf { $Force } '--force ' '') `"${Name}`""
-        git checkout $(IIf { $Force } '--force' $null) $Name 2>&1 |
+        (git checkout $(IIf { $Force } '--force' $null) $Name) |
             ForEach-Object -Process { Show-GitProgress -Id 1 -command $command -theItem $PSItem -Verbose:$false }
     }
 }
@@ -267,9 +267,9 @@ function Publish-Develop {
         if (-not ($branch -eq 'master')) {
             Switch-GitBranch -Name 'master' -Verbose:$false
         }
-        git rebase 'develop' --stat 2>&1 |
+        (git rebase 'develop' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 2 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
-        git push 2>&1 |
+        (git push) |
             ForEach-Object -Process { Show-GitProgress -Id 3 -command 'git push' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'master')) {
             Switch-GitBranch -Name $branch -Verbose:$false
@@ -308,9 +308,9 @@ function Publish-DevelopAlt {
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name 'development' -Verbose:$false
         }
-        git rebase 'develop' --stat 2>&1 |
+        (git rebase 'develop' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 2 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
-        git push 2>&1 |
+        (git push) |
             ForEach-Object -Process { Show-GitProgress -Id 3 -command 'git push' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name $branch -Verbose:$false
@@ -350,10 +350,10 @@ function Update-Develop {
             Switch-GitBranch -Name 'master' -Verbose:$false
         }
         Read-Repository
-        git rebase --stat 2>&1 |
+        (git rebase --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 4 -command 'git rebase' -theItem $PSItem -Verbose:$false }
         Switch-GitBranch -Name 'develop' -Verbose:$false
-        git rebase 'master' --stat 2>&1 |
+        (git rebase 'master' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 5 -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
@@ -393,13 +393,13 @@ function Update-DevelopAlt {
             Switch-GitBranch -Name 'master' -Verbose:$false
         }
         Read-Repository
-        git rebase --stat 2>&1 |
+        (git rebase --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 6 -command 'git rebase' -theItem $PSItem -Verbose:$false }
         Switch-GitBranch -Name 'development' -Verbose:$false
-        git rebase --stat 2>&1 |
+        (git rebase --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 7 -command 'git rebase' -theItem $PSItem -Verbose:$false }
         Switch-GitBranch -Name 'develop' -Verbose:$false
-        git rebase 'development' --stat 2>&1 |
+        (git rebase 'development' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 8 -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
@@ -434,9 +434,10 @@ function Read-Repository {
 
     BEGIN {
         $gitDir = (Get-GitDir)
-        if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, 'git fetch --all --tags --prune')) {
-            $command = "${gitDir}: git fetch --all --tags --prune"
-            git fetch --all --tags --prune --progress 2>&1 |
+        $theCmd = 'git fetch --all --tags --prune'
+        if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, $theCmd)) {
+            $command = "${gitDir}: ${theCmd}"
+            (git fetch --all --tags --prune --progress) |
                 ForEach-Object -Process { Show-GitProgress -Id 9 -command $command -theItem $PSItem -Verbose:$false }
         }
     }
@@ -480,7 +481,7 @@ function Update-Branch {
             $Name = ,((Get-GitStatus).Branch)
         }
 
-        if ($AF4JMgitErrors) {
+        if (${global:AF4JMgitErrors}) {
             ${local:ErrorView} = ${global:ErrorView}
             ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
@@ -494,7 +495,7 @@ function Update-Branch {
 
             $gitStatus = (Get-GitStatus)
             if ((($gitStatus.AheadBy -gt 0) -or ($gitStatus.BehindBy -gt 0)) -and $PSCmdlet.ShouldProcess("origin/${refname}", 'git rebase')) {
-                git rebase --stat 2>&1 |
+                (git rebase --stat) |
                     ForEach-Object -Process { Show-GitProgress -Id 10 -command 'git rebase' -theItem $PSItem -Verbose:$false }
             }
         }
@@ -505,7 +506,7 @@ function Update-Branch {
     }
 
     END {
-        if ($AF4JMgitErrors) {
+        if (${global:AF4JMgitErrors}) {
             ${global:ErrorView} = ${local:ErrorView}
         }
     }
@@ -578,7 +579,7 @@ function Update-Repository {
         }
 
         Push-Location
-        if ($AF4JMgitErrors) {
+        if (${global:AF4JMgitErrors}) {
             ${local:ErrorView} = ${global:ErrorView}
             ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
@@ -605,7 +606,7 @@ function Update-Repository {
             Read-Repository -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
 
             # get all local branches, filter down to remote tracking branches, short name only, call Update-Branch
-            git for-each-ref 'refs/heads' --format="%(refname:short)~%(upstream)" --sort="committerdate" |
+            (git for-each-ref 'refs/heads' --format="%(refname:short)~%(upstream)" --sort="committerdate") |
                 Where-Object -FilterScript { $PSItem.split("~")[1].Length -gt 0 } |
                 ForEach-Object -Process { $PSItem.split('~')[0] } |
                 Update-Branch -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
@@ -616,7 +617,7 @@ function Update-Repository {
 
             if ((-not $Reset) -and (-not $stashRef)) {
                 Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
-            } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply `"${stashRef}`"")) {
+            } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply ${stashRef}")) {
                 git stash apply $stashRef
             }
         }
@@ -628,8 +629,8 @@ function Update-Repository {
 
     END {
         Pop-Location
-        if ($global:AF4JMgitErrors) {
-            $global:ErrorView = $local:ErrorView
+        if (${global:AF4JMgitErrors}) {
+            ${global:ErrorView} = ${local:ErrorView}
         }
     }
 }
@@ -701,7 +702,7 @@ function Update-DevelopBranch {
         }
 
         Push-Location
-        if ($AF4JMgitErrors) {
+        if (${global:AF4JMgitErrors}) {
             ${local:ErrorView} = ${global:ErrorView}
             ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
@@ -730,7 +731,7 @@ function Update-DevelopBranch {
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name 'develop' -Verbose:$false
             }
-            git rebase 'master' --stat 2>&1 |
+            (git rebase 'master' --stat) |
                 ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
@@ -738,7 +739,7 @@ function Update-DevelopBranch {
 
             if ((-not $Reset) -and (-not $stashRef)) {
                 Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
-            } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply `"${stashRef}`"")) {
+            } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply ${stashRef}")) {
                 git stash apply $stashRef
             }
         }
@@ -750,8 +751,8 @@ function Update-DevelopBranch {
 
     END {
         Pop-Location
-        if ($global:AF4JMgitErrors) {
-            $global:ErrorView = $local:ErrorView
+        if (${global:AF4JMgitErrors}) {
+            ${global:ErrorView} = ${local:ErrorView}
         }
     }
 }
@@ -818,7 +819,7 @@ function Optimize-Repository {
         }
 
         Push-Location
-        if ($AF4JMgitErrors) {
+        if (${global:AF4JMgitErrors}) {
             ${local:ErrorView} = ${global:ErrorView}
             ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
@@ -838,7 +839,7 @@ function Optimize-Repository {
                 }
             }
 
-            git gc --aggressive 2>&1 |
+            (git gc --aggressive) |
                 ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git gc --aggressive' -theItem $PSItem -Verbose:$false }
         }
 
@@ -849,8 +850,8 @@ function Optimize-Repository {
 
     END {
         Pop-Location
-        if ($global:AF4JMgitErrors) {
-            $global:ErrorView = $local:ErrorView
+        if (${global:AF4JMgitErrors}) {
+            ${global:ErrorView} = ${local:ErrorView}
         }
     }
 }
@@ -929,13 +930,14 @@ function Publish-Repository {
                 }
             }
 
+            $theCmd = 'git push "origin"'
             if ($WhatIfPreference) {
                 git push 'origin' --porcelain --dry-run
-            } elseif ($PSCmdlet.ShouldProcess($r, 'git push "origin"')) {
+            } elseif ($PSCmdlet.ShouldProcess($r, $theCmd)) {
                 $gitDir = (Get-GitDir)
 
-                $command = "${gitDir}: git push `"origin`""
-                git push 'origin' --porcelain 2>&1 |
+                $command = "${gitDir}: ${theCmd}"
+                (git push 'origin' --porcelain) |
                     ForEach-Object -Process { Show-GitProgress -Id $Id -command $command -theItem $PSItem -Verbose:$false }
             }
         }
@@ -1026,9 +1028,10 @@ function Reset-RepositoryCache
                 git rm --cached -r .
             }
 
-            if ($PSCmdlet.ShouldProcess($r, 'git reset --hard')) {
-                git reset --hard 2>&1 |
-                    ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git reset --hard' -theItem $PSItem -Verbose:$false }
+            $theCmd = 'git reset --hard'
+            if ($PSCmdlet.ShouldProcess($r, $theCmd)) {
+                (git reset --hard) |
+                    ForEach-Object -Process { Show-GitProgress -Id $Id -command $theCmd -theItem $PSItem -Verbose:$false }
             }
         }
 
@@ -1064,7 +1067,7 @@ function Show-GitProgress {
     [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $false)]
     PARAM(
         #output from git to parse for progress
-        [Parameter(Mandatory = $true, ValueFromPipeline = $false, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = '$PSItem must be specified')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = '$PSItem must be specified')]
         [Object[]]$theItem,
 
         #command to display for the progress bar
