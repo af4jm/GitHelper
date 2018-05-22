@@ -1086,17 +1086,17 @@ function Show-GitProgress {
             if ($item.Contains('done') -or $item.Contains('complete')) {
                 Write-Progress -Id $Id -ParentId -1 -Activity $command -SecondsRemaining 0 -PercentComplete 100
                 Write-Progress -Id $Id -ParentId -1 -Activity $command -SecondsRemaining -1 -PercentComplete -1 -Complete:$true
-                Write-Output -InputObject $item
+                Write-Host -Object $item
             } elseif ($parsed.Length -eq 4) {
                 try { # calculate the %
                     $pct = [int]((([int]$parsed[1]) / ([int]$parsed[2])) * 100)
                     $progress = $item -split ':',2
                     Write-Progress -Id $Id -ParentId -1 -Activity $command -CurrentOperation $progress[0] -Status $progress[1] -SecondsRemaining -1 -PercentComplete $pct
                 } catch { # calculation failed, just display the message
-                    Write-Output -InputObject $item
+                    Write-Host -Object $item
                 }
             } else {
-                Write-Output -InputObject $item
+                Write-Host -Object $item
             }
         }
     }
