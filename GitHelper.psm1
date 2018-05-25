@@ -64,7 +64,7 @@ function Get-GitDir {
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
     [Alias('gitdir')]
-    [OutputType([String])]
+    [OutputType([string])]
     PARAM()
 
     BEGIN {
@@ -104,16 +104,16 @@ function Set-Repository
         #repository to set current location to
         [Parameter(Mandatory = $true, Position = 0, HelpMessage = 'Repository must be specified')]
         [Alias('RepositoryName', 'RepoName')]
-        [String]$Name,
+        [string]$Name,
 
         #path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
-        [String]$Path = $null,
+        [string]$Path = $null,
 
         #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
-        [String]$LiteralPath = $null
+        [string]$LiteralPath = $null
     )
 
     BEGIN {
@@ -160,11 +160,11 @@ function Switch-GitBranch {
         #name of the branch to checkout
         [Parameter(Mandatory = $true, Position = 0, HelpMessage = 'Branch name must be specified')]
         [Alias('BranchName')]
-        [String]$Name,
+        [string]$Name,
 
         #passed to git checkout
         [Parameter()]
-        [Switch]$Force
+        [switch]$Force
     )
 
     BEGIN {
@@ -196,7 +196,7 @@ function Add-TrackingBranch {
     PARAM(
         #Name of the remote branch to track. Will also be used as the name of the local tracking branch.
         [Parameter(Mandatory = $true, Position = 0, HelpMessage = 'Branch must be specified')]
-        [String]$Branch
+        [string]$Branch
     )
 
     BEGIN {
@@ -226,7 +226,7 @@ function Remove-Branch {
     PARAM(
         #Name of the local branch to drop.
         [Parameter(Mandatory = $true, Position = 0, HelpMessage = 'Branch must be specified')]
-        [String]$Branch
+        [string]$Branch
     )
 
     BEGIN {
@@ -469,11 +469,11 @@ function Update-Branch {
         #string array of local tracking branches. If omitted rebases the current branch only
         [Parameter(ValueFromPipeline = $true, Position = 0)]
         [Alias('BranchName')]
-        [String[]]$Name = $null,
+        [string[]]$Name = $null,
 
         #Indicates whether the output of this function should be the function input or nothing.
         [Parameter()]
-        [Switch]$PassThru
+        [switch]$PassThru
     )
 
     BEGIN {
@@ -542,25 +542,25 @@ function Update-Repository {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
         [ValidateNotNullOrEmpty()]
         [Alias('RepositoryName', 'RepoName')]
-        [String[]]$Name,
+        [string[]]$Name,
 
         #path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
-        [String]$Path = $null,
+        [string]$Path = $null,
 
         #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
-        [String]$LiteralPath = $null,
+        [string]$LiteralPath = $null,
 
         #switch which when specified indicates that current changes should be reset instead of stashed before getting latest and popped when done
         [Parameter()]
         [Alias('r')]
-        [Switch]$Reset,
+        [switch]$Reset,
 
         #Indicates whether the output of this function should be the function input or nothing.
         [Parameter()]
-        [Switch]$PassThru
+        [switch]$PassThru
     )
 
     BEGIN {
@@ -665,25 +665,25 @@ function Update-DevelopBranch {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
         [ValidateNotNullOrEmpty()]
         [Alias('RepositoryName', 'RepoName')]
-        [String[]]$Name,
+        [string[]]$Name,
 
         #path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
-        [String]$Path = $null,
+        [string]$Path = $null,
 
         #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
-        [String]$LiteralPath = $null,
+        [string]$LiteralPath = $null,
 
         #switch which when specified indicates that current changes should be reset instead of stashed before getting latest and popped when done
         [Parameter()]
         [Alias('r')]
-        [Switch]$Reset,
+        [switch]$Reset,
 
         #Indicates whether the output of this function should be the function input or nothing.
         [Parameter()]
-        [Switch]$PassThru
+        [switch]$PassThru
     )
 
     BEGIN {
@@ -787,20 +787,20 @@ function Optimize-Repository {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
         [ValidateNotNullOrEmpty()]
         [Alias('RepositoryName', 'RepoName')]
-        [String[]]$Name,
+        [string[]]$Name,
 
         #path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
-        [String]$Path = $null,
+        [string]$Path = $null,
 
         #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
-        [String]$LiteralPath = $null,
+        [string]$LiteralPath = $null,
 
         #Indicates whether the output of this function should be the function input or nothing.
         [Parameter()]
-        [Switch]$PassThru
+        [switch]$PassThru
     )
 
     BEGIN {
@@ -883,20 +883,20 @@ function Publish-Repository {
         #repositories to get latest on
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
         [Alias('RepositoryName', 'RepoName')]
-        [String[]]$Name,
+        [string[]]$Name,
 
         #path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
-        [String]$Path = $null,
+        [string]$Path = $null,
 
         #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
-        [String]$LiteralPath = $null,
+        [string]$LiteralPath = $null,
 
         #Indicates whether the output of this function should be the function input or nothing.
         [Parameter()]
-        [Switch]$PassThru
+        [switch]$PassThru
     )
 
     BEGIN {
@@ -977,20 +977,20 @@ function Reset-RepositoryCache
         #repositories to reset the cache on
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
         [Alias('RepositoryName', 'RepoName')]
-        [String[]]$Name,
+        [string[]]$Name,
 
         #path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
-        [String]$Path = $null,
+        [string]$Path = $null,
 
         #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
-        [String]$LiteralPath = $null,
+        [string]$LiteralPath = $null,
 
         #Indicates whether the output of this function should be the function input or nothing.
         [Parameter()]
-        [Switch]$PassThru
+        [switch]$PassThru
     )
 
     BEGIN {
@@ -1072,11 +1072,11 @@ function Show-GitProgress {
 
         #command to display for the progress bar
         [Parameter()]
-        [String]$command,
+        [string]$command,
 
         #command to display for the progress bar
         [Parameter()]
-        [Int]$Id = 0
+        [int]$Id = 0
     )
 
     PROCESS {
@@ -1089,7 +1089,7 @@ function Show-GitProgress {
                 Write-Host -Object $item
             } elseif ($parsed.Length -eq 4) {
                 try { # calculate the %
-                    $pct = [int]((([int]$parsed[1]) / ([int]$parsed[2])) * 100)
+                    $pct = [int]((([double]$parsed[1]) / ([double]$parsed[2])) * 100)
                     $progress = $item -split ':',2
                     Write-Progress -Id $Id -ParentId -1 -Activity $command -CurrentOperation $progress[0] -Status $progress[1] -SecondsRemaining -1 -PercentComplete $pct
                 } catch { # calculation failed, just display the message
