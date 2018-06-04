@@ -61,7 +61,7 @@
     NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Initialize-Repository', 'Get-GitDir', 'Set-Repository', 'Switch-GitBranch', 'Add-TrackingBranch', 'Remove-Branch', 'Publish-Develop', 'Publish-DevelopAlt', 'Update-Develop', 'Update-DevelopAlt', 'Read-Repository', 'Update-Branch', 'Update-Repository', 'Update-DevelopBranch', 'Optimize-Repository', 'Publish-Repository', 'Reset-RepositoryCache')
+    FunctionsToExport = @('Initialize-Repository', 'Get-GitDir', 'Set-Repository', 'Switch-GitBranch', 'Add-TrackingBranch', 'Remove-Branch', 'Publish-Develop', 'Publish-DevelopAlt', 'Update-Develop', 'Update-DevelopAlt', 'Read-Repository', 'Update-Branch', 'Update-Repository', 'Update-DevelopBranch', 'Update-DevelopBranchAlt', 'Optimize-Repository', 'Publish-Repository', 'Reset-RepositoryCache')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport = @()
@@ -70,7 +70,7 @@
     VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport = @('Init-Repo', 'gitdir', 'Set-Repo', 'repo', 'checkout', 'gittrack', 'gitdrop', 'pushdev', 'pushdeva', 'pulldev', 'pulldeva', 'Read-Repo', 'Update-Repo', 'Update-Dev', 'Sync-Dev', 'Optimize-Repo', 'Pub-Repo', 'Reset-RepoCache', 'gitfix')
+    AliasesToExport = @('Init-Repo', 'gitdir', 'Set-Repo', 'repo', 'checkout', 'gittrack', 'gitdrop', 'pushdev', 'pushdeva', 'pulldev', 'pulldeva', 'Read-Repo', 'Update-Repo', 'Update-Dev', 'Update-DevAlt', 'Optimize-Repo', 'Pub-Repo', 'Reset-RepoCache', 'gitfix')
 
     # DSC resources to export from this module
     DscResourcesToExport = @()

@@ -9,7 +9,7 @@ LONG DESCRIPTION
     recommended to specify the default parent folder for your repositories in
     profile.ps1.  See the module's README file for details.
 
-Additionally, because of the way git dumps so much of its output to STDERR
+    Additionally, because of the way git dumps so much of its output to STDERR
     instead of STDOUT, it's also recommended to add the following if block to
     profile.ps1 to improve the output display.  Setting that flag to $true
     switches ErrorView to 'CategoryView' during git operations, and restores
@@ -69,19 +69,22 @@ FUNCTIONS
     Switch-GitBranch
         Sets the current location to the root of the specified repository.
 
-    Sync-Branch
+    Update-Branch
         Git checkout & rebase the current or specified branch.
 
-    Sync-Develop
+    Update-Develop
         Pull 'master' and rebase 'develop' in the current git repository.
 
-    Sync-DevelopAlt
+    Update-DevelopAlt
         Pull 'development' and rebase 'develop' in the current git repository.
 
-    Sync-DevelopBranch
+    Update-DevelopBranch
         Sync 'develop' branch to 'master' branch on a specified git repository.
 
-    Sync-Repository
+    Update-DevelopBranchAlt
+        Sync 'develop' branch to 'development' branch on a specified git repository.
+
+    Update-Repository
         Get latest on a specified git repository.
 
 ALIASES
@@ -97,20 +100,21 @@ ALIASES
     Init-Repo       : alias for GitHelper\Init-Repository function
     Optimize-Repo   : alias for GitHelper\Optimize-Repository function
     Pub-Repo        : alias for GitHelper\Pub-Repository function
-    pulldev         : alias for GitHelper\Sync-Develop function
-    pulldeva        : alias for GitHelper\Sync-DevelopAlt function
+    pulldev         : alias for GitHelper\Update-Develop function
+    pulldeva        : alias for GitHelper\Update-DevelopAlt function
     pushdev         : alias for GitHelper\Publish-Develop function
     pushdeva        : alias for GitHelper\Publish-DevelopAlt function
     Read-Repo       : alias for GitHelper\Read-Repository function
     Reset-RepoCache : alias for GitHelper\Reset-RepositoryCache function
     repo            : alias for GitHelper\Set-Repository function
     Set-Repo        : alias for GitHelper\Set-Repository function
-    Sync-Dev        : alias for GitHelper\Sync-DevelopBranch function
-    Sync-Repo       : alias for GitHelper\Sync-Repository function
+    Update-Dev      : alias for GitHelper\Update-DevelopBranch function
+    Update-DevAlt   : alias for GitHelper\Update-DevelopBranchAlt function
+    Update-Repo     : alias for GitHelper\Update-Repository function
 
 EXAMPLES
-    Sync-Repository -Name 'myRepo' -Path 'C:\src' -Verbose
-    Sync-Repo 'myRepo' -Path 'C:\src' -Verbose
+    Update-Repository -Name 'myRepo' -Path 'C:\src' -Verbose
+    Update-Repo 'myRepo' -Path 'C:\src' -Verbose
 
 KEYWORDS
     git
