@@ -26,7 +26,7 @@ function Initialize-Repository {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -56,7 +56,7 @@ function Get-GitDir {
         If the current location is in a git repository, the name of the parent folder; otherwise, $null.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -92,7 +92,7 @@ function Set-Repository
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -148,7 +148,7 @@ function Switch-GitBranch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -170,7 +170,7 @@ function Switch-GitBranch {
     BEGIN {
         $command = "git checkout $(IIf { $Force } '--force ' '') `"${Name}`""
         (git checkout $(IIf { $Force } '--force' $null) $Name) |
-            ForEach-Object -Process { Show-GitProgress -Id 1 -command $command -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 101 -command $command -theItem $PSItem -Verbose:$false }
     }
 }
 
@@ -185,7 +185,7 @@ function Add-TrackingBranch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -215,7 +215,7 @@ function Remove-Branch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -247,7 +247,7 @@ function Publish-Develop {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -268,9 +268,9 @@ function Publish-Develop {
             Switch-GitBranch -Name 'master' -Verbose:$false
         }
         (git rebase 'develop' --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 2 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
         (git push) |
-            ForEach-Object -Process { Show-GitProgress -Id 3 -command 'git push' -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'master')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -288,7 +288,7 @@ function Publish-DevelopAlt {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -309,9 +309,9 @@ function Publish-DevelopAlt {
             Switch-GitBranch -Name 'development' -Verbose:$false
         }
         (git rebase 'develop' --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 2 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
         (git push) |
-            ForEach-Object -Process { Show-GitProgress -Id 3 -command 'git push' -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -329,7 +329,7 @@ function Update-Develop {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -351,10 +351,10 @@ function Update-Develop {
         }
         Read-Repository
         (git rebase --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 4 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 104 -command 'git rebase' -theItem $PSItem -Verbose:$false }
         Switch-GitBranch -Name 'develop' -Verbose:$false
         (git rebase 'master' --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 5 -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 105 -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -372,7 +372,7 @@ function Update-DevelopAlt {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -394,13 +394,13 @@ function Update-DevelopAlt {
         }
         Read-Repository
         (git rebase --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 6 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 106 -command 'git rebase' -theItem $PSItem -Verbose:$false }
         Switch-GitBranch -Name 'development' -Verbose:$false
         (git rebase --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 7 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 107 -command 'git rebase' -theItem $PSItem -Verbose:$false }
         Switch-GitBranch -Name 'develop' -Verbose:$false
         (git rebase 'development' --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 8 -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
+            ForEach-Object -Process { Show-GitProgress -Id 108 -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'develop')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -422,7 +422,7 @@ function Read-Repository {
         'myRepo1','myRepo2','myRepo3' | Read-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -438,7 +438,7 @@ function Read-Repository {
         if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, $theCmd)) {
             $command = "${gitDir}: ${theCmd}"
             (git fetch --all --tags --prune --progress) |
-                ForEach-Object -Process { Show-GitProgress -Id 9 -command $command -theItem $PSItem -Verbose:$false }
+                ForEach-Object -Process { Show-GitProgress -Id 109 -command $command -theItem $PSItem -Verbose:$false }
         }
     }
 }
@@ -458,7 +458,7 @@ function Update-Branch {
         git for-each-ref refs/heads --format="%(refname:short)" --sort=-committerdate | Update-Branch
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -496,7 +496,7 @@ function Update-Branch {
             $gitStatus = (Get-GitStatus)
             if ((($gitStatus.AheadBy -gt 0) -or ($gitStatus.BehindBy -gt 0)) -and $PSCmdlet.ShouldProcess("origin/${refname}", 'git rebase')) {
                 (git rebase --stat) |
-                    ForEach-Object -Process { Show-GitProgress -Id 10 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+                    ForEach-Object -Process { Show-GitProgress -Id 110 -command 'git rebase' -theItem $PSItem -Verbose:$false }
             }
         }
 
@@ -529,7 +529,7 @@ function Update-Repository {
         'myRepo1','myRepo2','myRepo3' | Update-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -652,7 +652,7 @@ function Update-DevelopBranch {
         'myRepo1','myRepo2','myRepo3' | Update-Dev
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -774,7 +774,7 @@ function Update-DevelopBranchAlt {
         'myRepo1','myRepo2','myRepo3' | Update-DevAlt
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -896,7 +896,7 @@ function Optimize-Repository {
         'myRepo1','myRepo2','myRepo3' | Optimize-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -993,7 +993,7 @@ function Publish-Repository {
         'myRepo1','myRepo2','myRepo3' | Pub-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -1086,7 +1086,7 @@ function Reset-RepositoryCache
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -1180,7 +1180,7 @@ function Show-GitProgress {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -1198,7 +1198,7 @@ function Show-GitProgress {
 
         #command to display for the progress bar
         [Parameter()]
-        [int]$Id = 0
+        [int]$Id = 1
     )
 
     PROCESS {
@@ -1206,18 +1206,21 @@ function Show-GitProgress {
             $item = $i.ToString()
             $parsed = $item -split { $PSItem -eq '(' -or $PSItem -eq '/' -or $PSItem -eq ')' }
             if ($item.Contains('done') -or $item.Contains('complete')) {
-                Write-Progress -Id $Id -ParentId -1 -Activity $command -SecondsRemaining 0 -PercentComplete 100
-                Write-Progress -Id $Id -ParentId -1 -Activity $command -SecondsRemaining -1 -PercentComplete -1 -Complete:$true
+                Write-Debug -Message 'Show-GitProgress: complete'
+                Write-Progress -Id $Id -Activity $command -SecondsRemaining 0 -PercentComplete 100
+                Write-Progress -Id $Id -Activity $command -SecondsRemaining (-1) -PercentComplete (-1) -Complete:$true
                 Write-Host -Object $item
             } elseif ($parsed.Length -eq 4) {
+                Write-Debug -Message 'Show-GitProgress: progress'
                 try { # calculate the %
                     $pct = [int]((([double]$parsed[1]) / ([double]$parsed[2])) * 100)
                     $progress = $item -split ':',2
-                    Write-Progress -Id $Id -ParentId -1 -Activity $command -CurrentOperation $progress[0] -Status $progress[1] -SecondsRemaining -1 -PercentComplete $pct
+                    Write-Progress -Id $Id -Activity $command -CurrentOperation $progress[0] -Status $progress[1] -SecondsRemaining (-1) -PercentComplete $pct
                 } catch { # calculation failed, just display the message
                     Write-Host -Object $item
                 }
             } else {
+                Write-Debug -Message 'Show-GitProgress: message'
                 Write-Host -Object $item
             }
         }

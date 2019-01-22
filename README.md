@@ -23,7 +23,7 @@ if ($host.Name -eq 'ConsoleHost') {
 }
 ```
 
-Suggested usage (in a .ps1 file that gets . sourced from profile, the alias "gall" is a contraction of "get all")...
+Suggested usage (in a .ps1 file that gets . sourced from profile,ps1, the alias "gall" is a contraction of "get all")...
 
 ```powershell
 function Update-MyRepos
@@ -39,7 +39,7 @@ function Update-MyRepos
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright (c) John Meyer. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
     #>
     [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('gall')]
