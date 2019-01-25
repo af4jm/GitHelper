@@ -488,15 +488,17 @@ function Update-Branch {
     }
 
     PROCESS {
-        foreach ($refname in $Name) {
-            if ($PSCmdlet.ShouldProcess($refname, 'git checkout --force')) {
-                Switch-GitBranch -Name $refname -Force -Verbose:$false
-            }
+        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+            foreach ($refname in $Name) {
+                if ($PSCmdlet.ShouldProcess($refname, 'git checkout --force')) {
+                    Switch-GitBranch -Name $refname -Force -Verbose:$false
+                }
 
-            $gitStatus = (Get-GitStatus)
-            if ((($gitStatus.AheadBy -gt 0) -or ($gitStatus.BehindBy -gt 0)) -and $PSCmdlet.ShouldProcess("origin/${refname}", 'git rebase')) {
-                (git rebase --stat) |
-                    ForEach-Object -Process { Show-GitProgress -Id 110 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+                $gitStatus = (Get-GitStatus)
+                if ((($gitStatus.AheadBy -gt 0) -or ($gitStatus.BehindBy -gt 0)) -and $PSCmdlet.ShouldProcess("origin/${refname}", 'git rebase')) {
+                    (git rebase --stat) |
+                        ForEach-Object -Process { Show-GitProgress -Id 110 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+                }
             }
         }
 
@@ -586,39 +588,41 @@ function Update-Repository {
     }
 
     PROCESS {
-        foreach ($r in $Name) {
-            switch ($PSCmdlet.ParameterSetName) {
-                'Path' {
-                    Set-Location -Path ([Path]::Combine($ThePath, $r))
+        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+            foreach ($r in $Name) {
+                switch ($PSCmdlet.ParameterSetName) {
+                    'Path' {
+                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                    }
+                    'LiteralPath' {
+                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                    }
                 }
-                'LiteralPath' {
-                    Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+
+                $branch = (Get-GitStatus -Verbose:$false).Branch
+
+                if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
+                    $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
                 }
-            }
 
-            $branch = (Get-GitStatus -Verbose:$false).Branch
+                # shouldn't have to pass Verbose, but if I don't it doesn't work
+                Read-Repository -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
 
-            if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
-                $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
-            }
+                # get all local branches, filter down to remote tracking branches, short name only, call Update-Branch
+                (git for-each-ref 'refs/heads' --format="%(refname:short)~%(upstream)" --sort="committerdate") |
+                    Where-Object -FilterScript { $PSItem.split("~")[1].Length -gt 0 } |
+                    ForEach-Object -Process { $PSItem.split('~')[0] } |
+                    Update-Branch -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
 
-            # shouldn't have to pass Verbose, but if I don't it doesn't work
-            Read-Repository -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
+                if (((Get-GitStatus -Verbose:$false).Branch -ne $branch) -and $PSCmdlet.ShouldProcess($branch, 'git checkout --force')) {
+                    Switch-GitBranch -Name $branch -Force -Verbose:$false
+                }
 
-            # get all local branches, filter down to remote tracking branches, short name only, call Update-Branch
-            (git for-each-ref 'refs/heads' --format="%(refname:short)~%(upstream)" --sort="committerdate") |
-                Where-Object -FilterScript { $PSItem.split("~")[1].Length -gt 0 } |
-                ForEach-Object -Process { $PSItem.split('~')[0] } |
-                Update-Branch -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
-
-            if (((Get-GitStatus -Verbose:$false).Branch -ne $branch) -and $PSCmdlet.ShouldProcess($branch, 'git checkout --force')) {
-                Switch-GitBranch -Name $branch -Force -Verbose:$false
-            }
-
-            if ((-not $Reset) -and (-not $stashRef)) {
-                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
-            } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply ${stashRef}")) {
-                git stash apply $stashRef
+                if ((-not $Reset) -and (-not $stashRef)) {
+                    Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
+                } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply ${stashRef}")) {
+                    git stash apply $stashRef
+                }
             }
         }
 
@@ -711,36 +715,38 @@ function Update-DevelopBranch {
     }
 
     PROCESS {
-        foreach ($r in $Name) {
-            $Id += 1
-            switch ($PSCmdlet.ParameterSetName) {
-                'Path' {
-                    Set-Location -Path ([Path]::Combine($ThePath, $r))
+        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+            foreach ($r in $Name) {
+                $Id += 1
+                switch ($PSCmdlet.ParameterSetName) {
+                    'Path' {
+                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                    }
+                    'LiteralPath' {
+                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                    }
                 }
-                'LiteralPath' {
-                    Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+
+                $branch = (Get-GitStatus -Verbose:$false).Branch
+
+                if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
+                    $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
                 }
-            }
 
-            $branch = (Get-GitStatus -Verbose:$false).Branch
+                if (-not ($branch -eq 'develop')) {
+                    Switch-GitBranch -Name 'develop' -Verbose:$false
+                }
+                (git rebase 'master' --stat) |
+                    ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
+                if (-not ($branch -eq 'develop')) {
+                    Switch-GitBranch -Name $branch -Verbose:$false
+                }
 
-            if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
-                $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
-            }
-
-            if (-not ($branch -eq 'develop')) {
-                Switch-GitBranch -Name 'develop' -Verbose:$false
-            }
-            (git rebase 'master' --stat) |
-                ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
-            if (-not ($branch -eq 'develop')) {
-                Switch-GitBranch -Name $branch -Verbose:$false
-            }
-
-            if ((-not $Reset) -and (-not $stashRef)) {
-                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
-            } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply ${stashRef}")) {
-                git stash apply $stashRef
+                if ((-not $Reset) -and (-not $stashRef)) {
+                    Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
+                } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply ${stashRef}")) {
+                    git stash apply $stashRef
+                }
             }
         }
 
@@ -833,36 +839,38 @@ function Update-DevelopBranchAlt {
     }
 
     PROCESS {
-        foreach ($r in $Name) {
-            $Id += 1
-            switch ($PSCmdlet.ParameterSetName) {
-                'Path' {
-                    Set-Location -Path ([Path]::Combine($ThePath, $r))
+        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+            foreach ($r in $Name) {
+                $Id += 1
+                switch ($PSCmdlet.ParameterSetName) {
+                    'Path' {
+                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                    }
+                    'LiteralPath' {
+                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                    }
                 }
-                'LiteralPath' {
-                    Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+
+                $branch = (Get-GitStatus -Verbose:$false).Branch
+
+                if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
+                    $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
                 }
-            }
 
-            $branch = (Get-GitStatus -Verbose:$false).Branch
+                if (-not ($branch -eq 'develop')) {
+                    Switch-GitBranch -Name 'develop' -Verbose:$false
+                }
+                (git rebase 'development' --stat) |
+                    ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
+                if (-not ($branch -eq 'develop')) {
+                    Switch-GitBranch -Name $branch -Verbose:$false
+                }
 
-            if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
-                $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
-            }
-
-            if (-not ($branch -eq 'develop')) {
-                Switch-GitBranch -Name 'develop' -Verbose:$false
-            }
-            (git rebase 'development' --stat) |
-                ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
-            if (-not ($branch -eq 'develop')) {
-                Switch-GitBranch -Name $branch -Verbose:$false
-            }
-
-            if ((-not $Reset) -and (-not $stashRef)) {
-                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
-            } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply ${stashRef}")) {
-                git stash apply $stashRef
+                if ((-not $Reset) -and (-not $stashRef)) {
+                    Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
+                } elseif ($stashRef -and $PSCmdlet.ShouldProcess($branch, "git stash apply ${stashRef}")) {
+                    git stash apply $stashRef
+                }
             }
         }
 
@@ -950,19 +958,21 @@ function Optimize-Repository {
     }
 
     PROCESS {
-        foreach ($r in $Name) {
-            $Id += 1
-            switch ($PSCmdlet.ParameterSetName) {
-                'Path' {
-                    Set-Location -Path ([Path]::Combine($ThePath, $r))
+        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+            foreach ($r in $Name) {
+                $Id += 1
+                switch ($PSCmdlet.ParameterSetName) {
+                    'Path' {
+                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                    }
+                    'LiteralPath' {
+                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                    }
                 }
-                'LiteralPath' {
-                    Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
-                }
-            }
 
-            (git gc --aggressive) |
-                ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git gc --aggressive' -theItem $PSItem -Verbose:$false }
+                (git gc --aggressive) |
+                    ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git gc --aggressive' -theItem $PSItem -Verbose:$false }
+            }
         }
 
         if ($PassThru) {
@@ -1041,26 +1051,28 @@ function Publish-Repository {
     }
 
     PROCESS {
-        foreach ($r in $Name) {
-            $Id += 1
-            switch ($PSCmdlet.ParameterSetName) {
-                'Path' {
-                    Set-Location -Path ([Path]::Combine($ThePath, $r))
+        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+            foreach ($r in $Name) {
+                $Id += 1
+                switch ($PSCmdlet.ParameterSetName) {
+                    'Path' {
+                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                    }
+                    'LiteralPath' {
+                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                    }
                 }
-                'LiteralPath' {
-                    Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+
+                $theCmd = 'git push "origin"'
+                if ($WhatIfPreference) {
+                    git push 'origin' --porcelain --dry-run
+                } elseif ($PSCmdlet.ShouldProcess($r, $theCmd)) {
+                    $gitDir = (Get-GitDir)
+
+                    $command = "${gitDir}: ${theCmd}"
+                    (git push 'origin' --porcelain) |
+                        ForEach-Object -Process { Show-GitProgress -Id $Id -command $command -theItem $PSItem -Verbose:$false }
                 }
-            }
-
-            $theCmd = 'git push "origin"'
-            if ($WhatIfPreference) {
-                git push 'origin' --porcelain --dry-run
-            } elseif ($PSCmdlet.ShouldProcess($r, $theCmd)) {
-                $gitDir = (Get-GitDir)
-
-                $command = "${gitDir}: ${theCmd}"
-                (git push 'origin' --porcelain) |
-                    ForEach-Object -Process { Show-GitProgress -Id $Id -command $command -theItem $PSItem -Verbose:$false }
             }
         }
 
@@ -1135,27 +1147,29 @@ function Reset-RepositoryCache
     }
 
     PROCESS {
-        foreach ($r in $Name) {
-            $Id += 1
-            switch ($PSCmdlet.ParameterSetName) {
-                'Path' {
-                    Set-Location -Path ([Path]::Combine($ThePath, $r))
+        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+            foreach ($r in $Name) {
+                $Id += 1
+                switch ($PSCmdlet.ParameterSetName) {
+                    'Path' {
+                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                    }
+                    'LiteralPath' {
+                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                    }
                 }
-                'LiteralPath' {
-                    Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+
+                if ($PSCmdlet.ShouldProcess($r, 'git rm --cached -r .')) {
+                    git rm --cached -r .
+                }
+
+                $theCmd = 'git reset --hard'
+                if ($PSCmdlet.ShouldProcess($r, $theCmd)) {
+                    (git reset --hard) |
+                        ForEach-Object -Process { Show-GitProgress -Id $Id -command $theCmd -theItem $PSItem -Verbose:$false }
                 }
             }
 
-            if ($PSCmdlet.ShouldProcess($r, 'git rm --cached -r .')) {
-                git rm --cached -r .
-            }
-
-            $theCmd = 'git reset --hard'
-            if ($PSCmdlet.ShouldProcess($r, $theCmd)) {
-                (git reset --hard) |
-                    ForEach-Object -Process { Show-GitProgress -Id $Id -command $theCmd -theItem $PSItem -Verbose:$false }
-            }
-        }
 
         if ($PassThru) {
             $PSItem
