@@ -1169,7 +1169,7 @@ function Reset-RepositoryCache
                         ForEach-Object -Process { Show-GitProgress -Id $Id -command $theCmd -theItem $PSItem -Verbose:$false }
                 }
             }
-
+        }
 
         if ($PassThru) {
             $PSItem
