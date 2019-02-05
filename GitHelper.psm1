@@ -468,6 +468,7 @@ function Update-Branch {
     PARAM(
         #string array of local tracking branches. If omitted rebases the current branch only
         [Parameter(ValueFromPipeline = $true, Position = 0)]
+        [AllowEmptyCollection()]
         [Alias('BranchName')]
         [string[]]$Name = $null,
 
@@ -542,7 +543,7 @@ function Update-Repository {
     PARAM(
         #repositories to get latest on
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
-        [ValidateNotNullOrEmpty()]
+        [AllowEmptyCollection()]
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
@@ -667,7 +668,7 @@ function Update-DevelopBranch {
     PARAM(
         #repositories to get latest on
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
-        [ValidateNotNullOrEmpty()]
+        [AllowEmptyCollection()]
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
@@ -791,7 +792,7 @@ function Update-DevelopBranchAlt {
     PARAM(
         #repositories to get latest on
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
-        [ValidateNotNullOrEmpty()]
+        [AllowEmptyCollection()]
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
@@ -915,7 +916,7 @@ function Optimize-Repository {
     PARAM(
         #repositories to get latest on
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
-        [ValidateNotNullOrEmpty()]
+        [AllowEmptyCollection()]
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
@@ -1014,6 +1015,7 @@ function Publish-Repository {
     PARAM(
         #repositories to get latest on
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
+        [AllowEmptyCollection()]
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
@@ -1110,6 +1112,7 @@ function Reset-RepositoryCache
     PARAM(
         #repositories to reset the cache on
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
+        [AllowEmptyCollection()]
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
