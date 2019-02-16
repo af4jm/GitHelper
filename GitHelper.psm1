@@ -12,7 +12,11 @@ if (-not (Test-Path -Path 'variable:\global:AF4JMgitErrors')) {
 }
 
 if (-not (Test-Path -Path 'variable:\global:AF4JMsrcPath')) {
-    Set-Variable -Name 'AF4JMsrcPath' -Value ([Path]::Combine(${env:SYSTEMDRIVE}, 'src')) -Scope 'Global'
+    if ((-not (Test-Variable 'variable:IsWindows')) -or $IsWindows) { # Windows
+        Set-Variable -Name 'AF4JMsrcPath' -Value (Join-Path -Path [Environment]::GetEnvironmentVariable('SYSTEMDRIVE') -ChildPath 'src') -Scope 'Global'
+    } else { # linux or Mac
+        Set-Variable -Name 'AF4JMsrcPath' -Value ('{0}src' -f [Path]::DirectorySeparatorChar) -Scope 'Global'
+    }
 }
 
 
@@ -124,14 +128,14 @@ function Set-Repository
                     $ThePath = $Path
                 }
 
-                Set-Location -Path ([Path]::Combine($ThePath, $Name))
+                Set-Location -Path (Join-Path -Path $ThePath -ChildPath $Name)
             }
             'LiteralPath' {
                 if ($LiteralPath) {
                     $ThePath = $LiteralPath
                 }
 
-                Set-Location -LiteralPath ([Path]::Combine($ThePath, $Name))
+                Set-Location -LiteralPath (Join-Path -Path $ThePath -ChildPath $Name)
             }
         }
     }
@@ -593,10 +597,10 @@ function Update-Repository {
             foreach ($r in $Name) {
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
-                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                        Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
                     }
                     'LiteralPath' {
-                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                        Set-Location -LiteralPath (Join-Path -Path $ThePath -ChildPath $r)
                     }
                 }
 
@@ -721,10 +725,10 @@ function Update-DevelopBranch {
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
-                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                        Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
                     }
                     'LiteralPath' {
-                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                        Set-Location -LiteralPath (Join-Path -Path $ThePath -ChildPath $r)
                     }
                 }
 
@@ -845,10 +849,10 @@ function Update-DevelopBranchAlt {
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
-                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                        Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
                     }
                     'LiteralPath' {
-                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                        Set-Location -LiteralPath (Join-Path -Path $ThePath -ChildPath $r)
                     }
                 }
 
@@ -964,10 +968,10 @@ function Optimize-Repository {
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
-                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                        Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
                     }
                     'LiteralPath' {
-                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                        Set-Location -LiteralPath (Join-Path -Path $ThePath -ChildPath $r)
                     }
                 }
 
@@ -1058,10 +1062,10 @@ function Publish-Repository {
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
-                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                        Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
                     }
                     'LiteralPath' {
-                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                        Set-Location -LiteralPath (Join-Path -Path $ThePath -ChildPath $r)
                     }
                 }
 
@@ -1155,10 +1159,10 @@ function Reset-RepositoryCache
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
-                        Set-Location -Path ([Path]::Combine($ThePath, $r))
+                        Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
                     }
                     'LiteralPath' {
-                        Set-Location -LiteralPath ([Path]::Combine($ThePath, $r))
+                        Set-Location -LiteralPath (Join-Path -Path $ThePath -ChildPath $r)
                     }
                 }
 
