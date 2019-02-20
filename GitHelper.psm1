@@ -3,20 +3,16 @@ using namespace System.IO
 using namespace System.Management.Automation
 Set-StrictMode -Version Latest
 
-if (Get-Module -Name 'GetLatest') {
+if (Get-Module -Name 'GitHelper') {
     return
 }
 
-if (-not (Test-Path -Path 'variable:\global:AF4JMgitErrors')) {
-    Set-Variable -Name 'AF4JMgitErrors' -Value $false -Scope 'Global'
+if (-not (Test-Path -Path 'variable:\Global:AF4JMgitErrors')) {
+    ${Global:AF4JMgitErrors} = $false
 }
 
-if (-not (Test-Path -Path 'variable:\global:AF4JMsrcPath')) {
-    if ((-not (Test-Variable 'variable:IsWindows')) -or $IsWindows) { # Windows
-        Set-Variable -Name 'AF4JMsrcPath' -Value (Join-Path -Path [Environment]::GetEnvironmentVariable('SYSTEMDRIVE') -ChildPath 'src') -Scope 'Global'
-    } else { # linux or Mac
-        Set-Variable -Name 'AF4JMsrcPath' -Value ('{0}src' -f [Path]::DirectorySeparatorChar) -Scope 'Global'
-    }
+if (-not (Test-Path -Path 'variable:\Global:AF4JMsrcPath')) {
+    ${Global:AF4JMsrcPath} = (Join-Path -Path ((Get-Item -Path ${env:HOME}).PSDrive.Root) -ChildPath 'src')
 }
 
 
