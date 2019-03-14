@@ -971,6 +971,7 @@ function Optimize-Repository {
                     }
                 }
 
+                Write-Verbose -Message "${r}: `"git gc --aggressive`""
                 (git gc --aggressive) |
                     ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git gc --aggressive' -theItem $PSItem -Verbose:$false }
             }
