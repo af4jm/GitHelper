@@ -482,9 +482,9 @@ function Update-Branch {
             $Name = ,((Get-GitStatus).Branch)
         }
 
-        if (${global:AF4JMgitErrors}) {
-            ${local:ErrorView} = ${global:ErrorView}
-            ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
+        if (${Global:AF4JMgitErrors}) {
+            ${Local:ErrorView} = ${Global:ErrorView}
+            ${Global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
     }
 
@@ -509,8 +509,8 @@ function Update-Branch {
     }
 
     END {
-        if (${global:AF4JMgitErrors}) {
-            ${global:ErrorView} = ${local:ErrorView}
+        if (${Global:AF4JMgitErrors}) {
+            ${Global:ErrorView} = ${Local:ErrorView}
         }
     }
 }
@@ -582,9 +582,9 @@ function Update-Repository {
         }
 
         Push-Location
-        if (${global:AF4JMgitErrors}) {
-            ${local:ErrorView} = ${global:ErrorView}
-            ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
+        if (${Global:AF4JMgitErrors}) {
+            ${Local:ErrorView} = ${Global:ErrorView}
+            ${Global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
     }
 
@@ -634,8 +634,8 @@ function Update-Repository {
 
     END {
         Pop-Location
-        if (${global:AF4JMgitErrors}) {
-            ${global:ErrorView} = ${local:ErrorView}
+        if (${Global:AF4JMgitErrors}) {
+            ${Global:ErrorView} = ${Local:ErrorView}
         }
     }
 }
@@ -707,9 +707,9 @@ function Update-DevelopBranch {
         }
 
         Push-Location
-        if (${global:AF4JMgitErrors}) {
-            ${local:ErrorView} = ${global:ErrorView}
-            ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
+        if (${Global:AF4JMgitErrors}) {
+            ${Local:ErrorView} = ${Global:ErrorView}
+            ${Global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
 
         $Id = 12
@@ -758,8 +758,8 @@ function Update-DevelopBranch {
 
     END {
         Pop-Location
-        if (${global:AF4JMgitErrors}) {
-            ${global:ErrorView} = ${local:ErrorView}
+        if (${Global:AF4JMgitErrors}) {
+            ${Global:ErrorView} = ${Local:ErrorView}
         }
     }
 }
@@ -831,9 +831,9 @@ function Update-DevelopBranchAlt {
         }
 
         Push-Location
-        if (${global:AF4JMgitErrors}) {
-            ${local:ErrorView} = ${global:ErrorView}
-            ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
+        if (${Global:AF4JMgitErrors}) {
+            ${Local:ErrorView} = ${Global:ErrorView}
+            ${Global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
 
         $Id = 12
@@ -882,8 +882,8 @@ function Update-DevelopBranchAlt {
 
     END {
         Pop-Location
-        if (${global:AF4JMgitErrors}) {
-            ${global:ErrorView} = ${local:ErrorView}
+        if (${Global:AF4JMgitErrors}) {
+            ${Global:ErrorView} = ${Local:ErrorView}
         }
     }
 }
@@ -950,9 +950,9 @@ function Optimize-Repository {
         }
 
         Push-Location
-        if (${global:AF4JMgitErrors}) {
-            ${local:ErrorView} = ${global:ErrorView}
-            ${global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
+        if (${Global:AF4JMgitErrors}) {
+            ${Local:ErrorView} = ${Global:ErrorView}
+            ${Global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
 
         $Id = 34
@@ -984,8 +984,8 @@ function Optimize-Repository {
 
     END {
         Pop-Location
-        if (${global:AF4JMgitErrors}) {
-            ${global:ErrorView} = ${local:ErrorView}
+        if (${Global:AF4JMgitErrors}) {
+            ${Global:ErrorView} = ${Local:ErrorView}
         }
     }
 }
