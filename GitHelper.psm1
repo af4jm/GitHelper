@@ -11,8 +11,8 @@ if (-not (Test-Path -Path 'variable:\Global:AF4JMgitErrors')) {
     ${Global:AF4JMgitErrors} = $false
 }
 
-if (-not (Test-Path -Path 'variable:\Global:AF4JMsrcPath')) {
-    ${Global:AF4JMsrcPath} = (Join-Path -Path ((Get-Item -Path ${env:HOME}).PSDrive.Root) -ChildPath 'src')
+if (-not (Test-Path -Path 'variable:\Env:src')) {
+    ${Env:src} = (Join-Path -Path ((Get-Item -Path ${Env:HOME}).PSDrive.Root) -ChildPath 'src')
 }
 
 
@@ -106,18 +106,18 @@ function Set-Repository
         [Alias('RepositoryName', 'RepoName')]
         [string]$Name,
 
-        #path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
         [string]$Path = $null,
 
-        #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #literal path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
         [string]$LiteralPath = $null
     )
 
     BEGIN {
-        $ThePath = $AF4JMsrcPath
+        $ThePath = ${Env:src}
         switch ($PSCmdlet.ParameterSetName) {
             'Path' {
                 if ($Path) {
@@ -547,12 +547,12 @@ function Update-Repository {
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
-        #path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
         [string]$Path = $null,
 
-        #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #literal path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
         [string]$LiteralPath = $null,
 
@@ -567,7 +567,7 @@ function Update-Repository {
     )
 
     BEGIN {
-        $ThePath = $AF4JMsrcPath
+        $ThePath = ${Env:src}
         switch ($PSCmdlet.ParameterSetName) {
             'Path' {
                 if ($Path) {
@@ -672,12 +672,12 @@ function Update-DevelopBranch {
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
-        #path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
         [string]$Path = $null,
 
-        #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #literal path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
         [string]$LiteralPath = $null,
 
@@ -692,7 +692,7 @@ function Update-DevelopBranch {
     )
 
     BEGIN {
-        $ThePath = $AF4JMsrcPath
+        $ThePath = ${Env:src}
         switch ($PSCmdlet.ParameterSetName) {
             'Path' {
                 if ($Path) {
@@ -796,12 +796,12 @@ function Update-DevelopBranchAlt {
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
-        #path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
         [string]$Path = $null,
 
-        #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #literal path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
         [string]$LiteralPath = $null,
 
@@ -816,7 +816,7 @@ function Update-DevelopBranchAlt {
     )
 
     BEGIN {
-        $ThePath = $AF4JMsrcPath
+        $ThePath = ${Env:src}
         switch ($PSCmdlet.ParameterSetName) {
             'Path' {
                 if ($Path) {
@@ -920,12 +920,12 @@ function Optimize-Repository {
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
-        #path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
         [string]$Path = $null,
 
-        #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #literal path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
         [string]$LiteralPath = $null,
 
@@ -935,7 +935,7 @@ function Optimize-Repository {
     )
 
     BEGIN {
-        $ThePath = $AF4JMsrcPath
+        $ThePath = ${Env:src}
         switch ($PSCmdlet.ParameterSetName) {
             'Path' {
                 if ($Path) {
@@ -1020,12 +1020,12 @@ function Publish-Repository {
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
-        #path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
         [string]$Path = $null,
 
-        #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #literal path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
         [string]$LiteralPath = $null,
 
@@ -1035,7 +1035,7 @@ function Publish-Repository {
     )
 
     BEGIN {
-        $ThePath = $AF4JMsrcPath
+        $ThePath = ${Env:src}
         switch ($PSCmdlet.ParameterSetName) {
             'Path' {
                 if ($Path) {
@@ -1117,12 +1117,12 @@ function Reset-RepositoryCache
         [Alias('RepositoryName', 'RepoName')]
         [string[]]$Name,
 
-        #path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'Path')]
         [Alias('PSPath')]
         [string]$Path = $null,
 
-        #literal path to repositories folder, ${global:AF4JMsrcPath} if not specified
+        #literal path to repositories folder, ${Env:src} if not specified
         [Parameter(ParameterSetName = 'LiteralPath')]
         [string]$LiteralPath = $null,
 
@@ -1132,7 +1132,7 @@ function Reset-RepositoryCache
     )
 
     BEGIN {
-        $ThePath = $AF4JMsrcPath
+        $ThePath = ${Env:src}
         switch ($PSCmdlet.ParameterSetName) {
             'Path' {
                 if ($Path) {

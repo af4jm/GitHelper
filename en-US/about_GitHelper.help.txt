@@ -5,9 +5,15 @@ SHORT DESCRIPTION
     Helper functions for working with git repositories.
 
 LONG DESCRIPTION
-    This module can be used as is without dependencies, but to customize it it's
+    This module can be used as is without dependencies, but to customize it's
     recommended to specify the default parent folder for your repositories in
-    profile.ps1.  See the module's README file for details.
+    the environment variable "src".  If that environment variable is not set,
+    this module assumes the folder is
+
+    (Join-Path -Path ((Get-Item -Path ${Env:HOME}).PSDrive.Root) -ChildPath 'src')
+
+    which is "C:\src" on most Windows machines and "/src" on *nix-based
+    systems.
 
     Additionally, because of the way git dumps so much of its output to STDERR
     instead of STDOUT, it's also recommended to add the following if block to
@@ -15,9 +21,6 @@ LONG DESCRIPTION
     switches ErrorView to 'CategoryView' during git operations, and restores
     its original value upon completion. If it's not defined, it defaults to
     $false.
-
-    # default [System.IO.Path]::Combine(${env:SYSTEMDRIVE}, 'src')
-    ${global:AF4JMsrcPath} = 'C:\src'
 
     if ($host.Name -eq 'ConsoleHost') {
         ${global:AF4JMgitErrors} = $false

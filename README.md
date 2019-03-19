@@ -9,12 +9,11 @@ Because PowerShell only approves certain verbs, the following mapping is used...
 * push → Publish
 * pull & push → Sync
 
-This module can be used as is without dependencies, but to customize it it's recommended to specify the default parent folder for your repositories in `profile.ps1`.
+This module can be used as is without dependencies, but to customize it it's recommended to specify the default parent folder for your repositories in the environment variable `src`.  If that environment variable is not set, this module assumes the folder is `(Join-Path -Path ((Get-Item -Path ${Env:HOME}).PSDrive.Root) -ChildPath 'src')` which is `C:\src` on most Windows machines and `/src` on *nix-based systems.
 
 Additionally, because of the way git dumps so much of its output to `STDERR` instead of `STDOUT` which causes many hosts to raise exceptions, it's also recommended to add the following if block to `profile.ps1` to improve the output display.  Setting that flag to `$true` switches `ErrorView` to `'CategoryView'` during git operations, and restores its original value upon completion. If it's not defined, it defaults to `$false`.  I've included my username in the setting simply to avoid conflicting with any other globals that may be defined elsewhere.
 
 ```powershell
-${global:AF4JMsrcPath} = 'C:\src' # default [System.IO.Path]::Combine(${env:SYSTEMDRIVE}, 'src')
 if ($host.Name -eq 'ConsoleHost') {
     ${global:AF4JMgitErrors} = $false
     $PSDefaultParameterValues.Add('Format-Table:AutoSize', $true)
@@ -23,7 +22,7 @@ if ($host.Name -eq 'ConsoleHost') {
 }
 ```
 
-Suggested usage (in a .ps1 file that gets . sourced from profile,ps1, the alias "gall" is a contraction of "get all")...
+Suggested usage (in a .ps1 file that gets . sourced from profile,ps1)... the alias "gall" is a contraction of "get all"
 
 ```powershell
 function Update-MyRepos
