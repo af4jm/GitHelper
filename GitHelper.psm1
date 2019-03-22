@@ -335,7 +335,7 @@ function Update-Develop {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
+    [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('pulldev')]
     PARAM()
 
@@ -345,18 +345,21 @@ function Update-Develop {
             throw 'Not a git repository!'
         }
 
-        $branch = $gitStatus.Branch
-        if (-not ($branch -eq 'master')) {
-            Switch-GitBranch -Name 'master' -Verbose:$false
-        }
-        Read-Repository
-        (git rebase --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 104 -command 'git rebase' -theItem $PSItem -Verbose:$false }
-        Switch-GitBranch -Name 'develop' -Verbose:$false
-        (git rebase 'master' --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 105 -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
-        if (-not ($branch -eq 'develop')) {
-            Switch-GitBranch -Name $branch -Verbose:$false
+        if ($PSCmdlet.ShouldProcess())
+        {
+            $branch = $gitStatus.Branch
+            if (-not ($branch -eq 'master')) {
+                Switch-GitBranch -Name 'master' -Verbose:$false
+            }
+            Read-Repository
+            (git rebase --stat) |
+                ForEach-Object -Process { Show-GitProgress -Id 104 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            Switch-GitBranch -Name 'develop' -Verbose:$false
+            (git rebase 'master' --stat) |
+                ForEach-Object -Process { Show-GitProgress -Id 105 -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
+            if (-not ($branch -eq 'develop')) {
+                Switch-GitBranch -Name $branch -Verbose:$false
+            }
         }
     }
 }
@@ -378,7 +381,7 @@ function Update-DevelopAlt {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
+    [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('pulldeva')]
     PARAM()
 
@@ -388,21 +391,24 @@ function Update-DevelopAlt {
             throw 'Not a git repository!'
         }
 
-        $branch = $gitStatus.Branch
-        if (-not ($branch -eq 'master')) {
-            Switch-GitBranch -Name 'master' -Verbose:$false
-        }
-        Read-Repository
-        (git rebase --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 106 -command 'git rebase' -theItem $PSItem -Verbose:$false }
-        Switch-GitBranch -Name 'development' -Verbose:$false
-        (git rebase --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 107 -command 'git rebase' -theItem $PSItem -Verbose:$false }
-        Switch-GitBranch -Name 'develop' -Verbose:$false
-        (git rebase 'development' --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 108 -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
-        if (-not ($branch -eq 'develop')) {
-            Switch-GitBranch -Name $branch -Verbose:$false
+        if ($PSCmdlet.ShouldProcess())
+        {
+            $branch = $gitStatus.Branch
+            if (-not ($branch -eq 'master')) {
+                Switch-GitBranch -Name 'master' -Verbose:$false
+            }
+            Read-Repository
+            (git rebase --stat) |
+                ForEach-Object -Process { Show-GitProgress -Id 106 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            Switch-GitBranch -Name 'development' -Verbose:$false
+            (git rebase --stat) |
+                ForEach-Object -Process { Show-GitProgress -Id 107 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            Switch-GitBranch -Name 'develop' -Verbose:$false
+            (git rebase 'development' --stat) |
+                ForEach-Object -Process { Show-GitProgress -Id 108 -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
+            if (-not ($branch -eq 'develop')) {
+                Switch-GitBranch -Name $branch -Verbose:$false
+            }
         }
     }
 }
@@ -489,7 +495,7 @@ function Update-Branch {
     }
 
     PROCESS {
-        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+        if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($refname in $Name) {
                 if ($PSCmdlet.ShouldProcess($refname, 'git checkout --force')) {
                     Switch-GitBranch -Name $refname -Force -Verbose:$false
@@ -589,7 +595,7 @@ function Update-Repository {
     }
 
     PROCESS {
-        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+        if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
@@ -716,7 +722,7 @@ function Update-DevelopBranch {
     }
 
     PROCESS {
-        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+        if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
@@ -840,7 +846,7 @@ function Update-DevelopBranchAlt {
     }
 
     PROCESS {
-        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+        if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
@@ -959,7 +965,7 @@ function Optimize-Repository {
     }
 
     PROCESS {
-        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+        if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
@@ -1054,7 +1060,7 @@ function Publish-Repository {
     }
 
     PROCESS {
-        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+        if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
@@ -1151,7 +1157,7 @@ function Reset-RepositoryCache
     }
 
     PROCESS {
-        if (($Name -ne $null) -and ($Name.Length -gt 0)) {
+        if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
                 $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
