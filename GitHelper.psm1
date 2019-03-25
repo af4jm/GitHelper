@@ -81,8 +81,7 @@ function Get-GitDir {
 }
 
 
-function Set-Repository
-{
+function Set-Repository {
     <#
         .SYNOPSIS
         Set the current location to the root of the specified repository.
@@ -99,7 +98,7 @@ function Set-Repository
         https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
-    [Alias('Set-Repo','repo')]
+    [Alias('Set-Repo', 'repo')]
     PARAM(
         #repository to set current location to
         [Parameter(Mandatory = $true, Position = 0, HelpMessage = 'Repository must be specified')]
@@ -345,8 +344,7 @@ function Update-Develop {
             throw 'Not a git repository!'
         }
 
-        if ($PSCmdlet.ShouldProcess())
-        {
+        if ($PSCmdlet.ShouldProcess()) {
             $branch = $gitStatus.Branch
             if (-not ($branch -eq 'master')) {
                 Switch-GitBranch -Name 'master' -Verbose:$false
@@ -391,8 +389,7 @@ function Update-DevelopAlt {
             throw 'Not a git repository!'
         }
 
-        if ($PSCmdlet.ShouldProcess())
-        {
+        if ($PSCmdlet.ShouldProcess()) {
             $branch = $gitStatus.Branch
             if (-not ($branch -eq 'master')) {
                 Switch-GitBranch -Name 'master' -Verbose:$false
@@ -485,7 +482,7 @@ function Update-Branch {
 
     BEGIN {
         if (($null -eq $Name) -or ($Name.Length -le 0)) {
-            $Name = ,((Get-GitStatus).Branch)
+            $Name = , ((Get-GitStatus).Branch)
         }
 
         if (${Global:AF4JMgitErrors}) {
@@ -1096,8 +1093,7 @@ function Publish-Repository {
 }
 
 
-function Reset-RepositoryCache
-{
+function Reset-RepositoryCache {
     <#
         .SYNOPSIS
         Reset the cache for the specified repository.  WARNING: This will undo all uncommitted changes.
@@ -1230,22 +1226,21 @@ function Show-GitProgress {
             $item = $i.ToString()
             $parsed = $item -split { $PSItem -eq '(' -or $PSItem -eq '/' -or $PSItem -eq ')' }
             if ($item.Contains('done') -or $item.Contains('complete')) {
-                Write-Debug -Message 'Show-GitProgress: complete'
                 Write-Progress -Id $Id -Activity $command -SecondsRemaining 0 -PercentComplete 100
                 Write-Progress -Id $Id -Activity $command -SecondsRemaining (-1) -PercentComplete (-1) -Complete:$true
-                Write-Host -Object $item
+                Out-Host -InputObject $item
             } elseif ($parsed.Length -eq 4) {
-                Write-Debug -Message 'Show-GitProgress: progress'
-                try { # calculate the %
+                try {
+                    # calculate the %
                     $pct = [int]((([double]$parsed[1]) / ([double]$parsed[2])) * 100)
-                    $progress = $item -split ':',2
+                    $progress = $item -split ':', 2
                     Write-Progress -Id $Id -Activity $command -CurrentOperation $progress[0] -Status $progress[1] -SecondsRemaining (-1) -PercentComplete $pct
-                } catch { # calculation failed, just display the message
-                    Write-Host -Object $item
+                } catch {
+                    # calculation failed, just display the message
+                    Out-Host -InputObject $item
                 }
             } else {
-                Write-Debug -Message 'Show-GitProgress: message'
-                Write-Host -Object $item
+                Out-Host -InputObject $item
             }
         }
     }
