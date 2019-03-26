@@ -101,7 +101,7 @@ function Set-Repository {
     [Alias('Set-Repo', 'repo')]
     PARAM(
         #repository to set current location to
-        [Parameter(Mandatory = $true, Position = 0, HelpMessage = 'Repository must be specified')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Repository must be specified')]
         [Alias('RepositoryName', 'RepoName')]
         [string]$Name,
 
@@ -467,10 +467,10 @@ function Update-Branch {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     PARAM(
         #string array of local tracking branches. If omitted rebases the current branch only
-        [Parameter(ValueFromPipeline = $true, Position = 0)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Branch must be specified')]
         [AllowEmptyCollection()]
         [Alias('BranchName')]
         [string[]]$Name = $null,
@@ -541,7 +541,7 @@ function Update-Repository {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Update-Repo')]
     PARAM(
         #repositories to get latest on
@@ -666,7 +666,7 @@ function Update-DevelopBranch {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Update-Dev')]
     PARAM(
         #repositories to get latest on
@@ -790,7 +790,7 @@ function Update-DevelopBranchAlt {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Update-DevAlt')]
     PARAM(
         #repositories to get latest on
@@ -914,7 +914,7 @@ function Optimize-Repository {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Optimize-Repo')]
     PARAM(
         #repositories to get latest on
@@ -1014,7 +1014,7 @@ function Publish-Repository {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Pub-Repo')]
     PARAM(
         #repositories to get latest on
@@ -1109,7 +1109,7 @@ function Reset-RepositoryCache {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $false, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Reset-RepoCache')]
     [Alias('gitfix')]
     PARAM(
@@ -1206,10 +1206,10 @@ function Show-GitProgress {
         .LINK
         https://github.com/af4jm/GitHelper/
     #>
-    [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $false)]
+    [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $false)]
     PARAM(
         #output from git to parse for progress
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = '$PSItem must be specified')]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = '$theItem must be specified')]
         [Object[]]$theItem,
 
         #command to display for the progress bar
