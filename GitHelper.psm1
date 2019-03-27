@@ -11,7 +11,7 @@ if (-not (Test-Path -Path 'variable:\Global:AF4JMgitErrors')) {
     ${Global:AF4JMgitErrors} = $false
 }
 
-if (-not (Test-Path -Path 'variable:\Env:src')) {
+if (-not (Test-Path -Path 'Env:src')) {
     ${Env:src} = (Join-Path -Path ((Get-Item -Path ${Env:HOME}).PSDrive.Root) -ChildPath 'src')
 }
 
@@ -344,7 +344,7 @@ function Update-Develop {
             throw 'Not a git repository!'
         }
 
-        if ($PSCmdlet.ShouldProcess()) {
+        #if ($PSCmdlet.ShouldProcess()) {
             $branch = $gitStatus.Branch
             if (-not ($branch -eq 'master')) {
                 Switch-GitBranch -Name 'master' -Verbose:$false
@@ -358,7 +358,7 @@ function Update-Develop {
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
             }
-        }
+        #}
     }
 }
 
