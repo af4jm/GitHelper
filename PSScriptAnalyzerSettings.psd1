@@ -2,6 +2,7 @@
     IncludeRules = @(
         'PSAlignAssignmentStatement',
         'PSAvoidDefaultValueSwitchParameter',
+        'PSAvoidGlobalVars',
         'PSAvoidUsingCmdletAliases',
         'PSAvoidUsingComputerNameHardcoded',
         'PSAvoidUsingConvertToSecureStringWithPlainText',
@@ -20,6 +21,9 @@
         'PSShouldProcess',
         'PSUseApprovedVerbs',
         'PSUseCmdletCorrectly',
+        'PSUseCompatibleCommands',
+        'PSUseCompatibleSyntax',
+        'PSUseCompatibleTypes',
         'PSUseConsistentIndentation',
         'PSUseConsistentWhitespace',
         'PSUseCorrectCasing',
@@ -38,13 +42,34 @@
             Enable = $true
             IgnoreOneLineBlock = $true
             NewLineAfter = $true
-            NoEmptyLineBefore = $true
+            NoEmptyLineBefore = $false
         }
         PSPlaceOpenBrace = @{
             Enable = $true
             IgnoreOneLineBlock = $true
             NewLineAfter = $true
             OnSameLine = $true
+        }
+        PSUseCompatibleCommmands = @{
+            Enable = $true
+            TargetProfiles = @(
+                'win-48_x64_10.0.17763.0_5.1.17763.316_x64_4.0.30319.42000_framework'
+                'win-48_x64_10.0.17763.0_6.1.3_x64_4.0.30319.42000_core'
+            )
+        }
+        PSUseCompatibleSyntax = @{
+            Enable = $true
+            TargetVersions = @(
+                '5.1',
+                '6.2'
+            )
+        }
+        PSUseCompatibleTypes = @{
+            Enable = $true
+            TargetProfiles = @(
+                'win-48_x64_10.0.17763.0_5.1.17763.316_x64_4.0.30319.42000_framework'
+                'win-48_x64_10.0.17763.0_6.1.3_x64_4.0.30319.42000_core'
+            )
         }
         PSUseConsistentIndentation = @{
             Enable = $true
