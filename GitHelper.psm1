@@ -437,10 +437,10 @@ function Read-Repository {
 
     BEGIN {
         $gitDir = (Get-GitDir)
-        $theCmd = 'git fetch --all --tags --prune'
+        $theCmd = 'git fetch --all --tags'
         if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, $theCmd)) {
             $command = "${gitDir}: ${theCmd}"
-            (git fetch --all --tags --prune --progress) |
+            (git fetch --all --tags --progress) |
                 ForEach-Object -Process { Show-GitProgress -Id 109 -command $command -theItem $PSItem -Verbose:$false }
         }
     }
