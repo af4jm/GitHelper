@@ -11,3 +11,6 @@ trim_trailing_whitespace = true
 
 [*.md]
 trim_trailing_whitespace = false
+
+[*.{ps1,psm1,psd1,pssc,psrc}]
+textwidth = 120

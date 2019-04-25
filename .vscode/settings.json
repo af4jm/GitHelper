@@ -2,5 +2,10 @@
     "powershell.enableProfileLoading": false,
     "powershell.scriptAnalysis.enable": true,
     "powershell.scriptAnalysis.settingsPath": "./PSScriptAnalyzerSettings.psd1",
-    "powershell.startAutomatically": false
+    "powershell.startAutomatically": false,
+    "[powershell]": {
+        "editor.rulers": [
+            120
+        ]
+    }
 }
