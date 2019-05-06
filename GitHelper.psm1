@@ -239,7 +239,7 @@ function Remove-Branch {
 function Publish-Develop {
     <#
         .SYNOPSIS
-        Rebase 'master' on 'develop' and push 'master'.
+        Rebase 'master' on 'develop' and push 'master'. (git push --tags 'origin' ':')
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -268,8 +268,8 @@ function Publish-Develop {
         }
         (git rebase 'develop' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
-        (git push) |
-            ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push' -theItem $PSItem -Verbose:$false }
+        (git push --tags 'origin' ':') |
+            ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push --tags "origin" ":"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'master')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -280,7 +280,7 @@ function Publish-Develop {
 function Publish-DevelopAlt {
     <#
         .SYNOPSIS
-        Rebase 'development' on 'develop' and push 'development'.
+        Rebase 'development' on 'develop' and push 'development'. (git push --tags 'origin' ':')
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
@@ -309,8 +309,8 @@ function Publish-DevelopAlt {
         }
         (git rebase 'develop' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
-        (git push) |
-            ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push' -theItem $PSItem -Verbose:$false }
+        (git push ':' --tags) |
+            ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push --tags "origin" ":"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -997,7 +997,7 @@ function Optimize-Repository {
 function Publish-Repository {
     <#
         .SYNOPSIS
-        Push to a specified git repository.
+        Push to a specified git repository. (git push --tags 'origin' ':')
         .INPUTS
         The repository name.
         .OUTPUTS
@@ -1069,14 +1069,14 @@ function Publish-Repository {
                     }
                 }
 
-                $theCmd = 'git push "origin"'
+                $theCmd = 'git push --tags "origin" ":"'
                 if ($WhatIfPreference) {
-                    git push 'origin' --porcelain --dry-run
+                    git push --tags --porcelain --dry-run 'origin' ':'
                 } elseif ($PSCmdlet.ShouldProcess($r, $theCmd)) {
                     $gitDir = (Get-GitDir)
 
                     $command = "${gitDir}: ${theCmd}"
-                    (git push 'origin' --porcelain) |
+                    (git push --tags --porcelain 'origin' ':') |
                         ForEach-Object -Process { Show-GitProgress -Id $Id -command $command -theItem $PSItem -Verbose:$false }
                 }
             }
