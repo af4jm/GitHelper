@@ -1,6 +1,3 @@
-using namespace System
-using namespace System.IO
-using namespace System.Management.Automation
 Set-StrictMode -Version Latest
 
 if (Get-Module -Name 'GitHelper') {
@@ -610,13 +607,13 @@ function Update-Repository {
                 }
 
                 # shouldn't have to pass Verbose, but if I don't it doesn't work
-                Read-Repository -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
+                Read-Repository -Verbose:($VerbosePreference -ne [Management.Automation.ActionPreference]::SilentlyContinue)
 
                 # get all local branches, filter down to remote tracking branches, short name only, call Update-Branch
                 (git for-each-ref 'refs/heads' --format="%(refname:short)~%(upstream)" --sort="committerdate") |
                     Where-Object -FilterScript { $PSItem.split("~")[1].Length -gt 0 } |
                     ForEach-Object -Process { $PSItem.split('~')[0] } |
-                    Update-Branch -Verbose:($VerbosePreference -ne [ActionPreference]::SilentlyContinue)
+                    Update-Branch -Verbose:($VerbosePreference -ne [Management.Automation.ActionPreference]::SilentlyContinue)
 
                 if (((Get-GitStatus -Verbose:$false).Branch -ne $branch) -and $PSCmdlet.ShouldProcess($branch, 'git checkout --force')) {
                     Switch-GitBranch -Name $branch -Force -Verbose:$false
