@@ -306,7 +306,7 @@ function Publish-DevelopAlt {
         }
         (git rebase 'develop' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
-        (git push ':' --tags) |
+        (git push --tags 'origin' ':') |
             ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push --tags "origin" ":"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name $branch -Verbose:$false
