@@ -37,18 +37,22 @@ FUNCTIONS
     Add-TrackingBranch
         Create a remote tracking branch in the current git repository.
 
+    Get-DefaultBranch
+        Get the name of the default branch, typically "main" (or in older
+        repositories "master").
+
     Get-GitDir
         Get the parent directory of the root of the current git repository.
 
     Initialize-Repository
-        Initialize the current repository with a "master" branch tracking
-        "origin/master" and an untracked "develop" branch.
+        Initialize the current repository with a branch tracking
+        origin's default branch and an untracked "develop" branch.
 
     Optimize-Repository
         Optimize a specified git repository.
 
     Publish-Develop
-        Rebase 'master' on 'develop' and push 'master'.
+        Rebase default branch on 'develop' and push default branch.
 
     Publish-DevelopAlt
         Rebase 'development' on 'develop' and push 'development'.
@@ -76,13 +80,13 @@ FUNCTIONS
         Git checkout & rebase the current or specified branch.
 
     Update-Develop
-        Pull 'master' and rebase 'develop' in the current git repository.
+        Pull default branch and rebase 'develop' in the current git repository.
 
     Update-DevelopAlt
         Pull 'development' and rebase 'develop' in the current git repository.
 
     Update-DevelopBranch
-        Sync 'develop' branch to 'master' branch on a specified git repository.
+        Sync 'develop' branch to default branch on a specified git repository.
 
     Update-DevelopBranchAlt
         Sync 'develop' branch to 'development' branch on a specified git repository.

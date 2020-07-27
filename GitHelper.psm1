@@ -13,17 +13,40 @@ if (-not (Test-Path -Path 'Env:src')) {
 }
 
 
-function Initialize-Repository {
+function Get-DefaultBranch {
     <#
         .SYNOPSIS
-        Initialize the current repository with a "master" branch tracking "origin/master" and an untracked "develop" branch.
+        Get the name of the default branch, typically "main" (or in older repositories "master").
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
+    #>
+    [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
+    BEGIN {
+        (git symbolic-ref --short refs/remotes/origin/HEAD) -ireplace 'origin/',''
+    }
+}
+
+
+function Initialize-Repository {
+    <#
+        .SYNOPSIS
+        Initialize the current repository with a default branch tracking origin's default branch and an untracked "develop" branch.
+        .INPUTS
+        You cannot pipe input to this function.
+        .OUTPUTS
+        Nothing is output from this function.
+        .NOTES
+        Author: John Meyer, AF4JM
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -34,9 +57,10 @@ function Initialize-Repository {
     PARAM()
 
     BEGIN {
-        git branch --track 'master' 'origin/master'
-        git branch --no-track 'develop' 'master'
-        #git remote set-head 'origin' 'master' # fixes the remote having the wrong default branch
+        $default = Get-DefaultBranch
+        git branch --track $default "origin/${default}"
+        git branch --no-track 'develop' $default
+        #git remote set-head 'origin' 'main' # fixes the remote having the wrong default branch
         npm install --global-style
         nuget restore -Recursive -NonInteractive
     }
@@ -53,7 +77,7 @@ function Get-GitDir {
         If the current location is in a git repository, the name of the parent folder; otherwise, $null.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -88,7 +112,7 @@ function Set-Repository {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -144,7 +168,7 @@ function Switch-GitBranch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -181,7 +205,7 @@ function Add-TrackingBranch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -211,7 +235,7 @@ function Remove-Branch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -236,14 +260,14 @@ function Remove-Branch {
 function Publish-Develop {
     <#
         .SYNOPSIS
-        Rebase 'master' on 'develop' and push 'master'. (git push --tags 'origin' ':')
+        Rebase default branch on 'develop' and push default branch. (git push --tags 'origin' ':')
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -259,15 +283,16 @@ function Publish-Develop {
             throw 'Not a git repository!'
         }
 
+        $default = Get-DefaultBranch
         $branch = $gitStatus.Branch
-        if (-not ($branch -eq 'master')) {
-            Switch-GitBranch -Name 'master' -Verbose:$false
+        if (-not ($branch -eq $default)) {
+            Switch-GitBranch -Name $default -Verbose:$false
         }
         (git rebase 'develop' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
         (git push --tags 'origin' ':') |
             ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push --tags "origin" ":"' -theItem $PSItem -Verbose:$false }
-        if (-not ($branch -eq 'master')) {
+        if (-not ($branch -eq $default)) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
     }
@@ -284,7 +309,7 @@ function Publish-DevelopAlt {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -318,14 +343,14 @@ function Publish-DevelopAlt {
 function Update-Develop {
     <#
         .SYNOPSIS
-        Pull 'master' and rebase 'develop'.
+        Pull default branch and rebase 'develop'.
         .INPUTS
         You cannot pipe input to this function.
         .OUTPUTS
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -342,16 +367,17 @@ function Update-Develop {
         }
 
         #if ($PSCmdlet.ShouldProcess()) {
+            $default = Get-DefaultBranch
             $branch = $gitStatus.Branch
-            if (-not ($branch -eq 'master')) {
-                Switch-GitBranch -Name 'master' -Verbose:$false
+            if (-not ($branch -eq $default)) {
+                Switch-GitBranch -Name $default -Verbose:$false
             }
             Read-Repository
             (git rebase --stat) |
                 ForEach-Object -Process { Show-GitProgress -Id 104 -command 'git rebase' -theItem $PSItem -Verbose:$false }
             Switch-GitBranch -Name 'develop' -Verbose:$false
-            (git rebase 'master' --stat) |
-                ForEach-Object -Process { Show-GitProgress -Id 105 -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
+            (git rebase $default --stat) |
+                ForEach-Object -Process { Show-GitProgress -Id 105 -command "git rebase `"${default}`"" -theItem $PSItem -Verbose:$false }
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
             }
@@ -370,7 +396,7 @@ function Update-DevelopAlt {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -387,9 +413,10 @@ function Update-DevelopAlt {
         }
 
         if ($PSCmdlet.ShouldProcess()) {
+            $default = Get-DefaultBranch
             $branch = $gitStatus.Branch
-            if (-not ($branch -eq 'master')) {
-                Switch-GitBranch -Name 'master' -Verbose:$false
+            if (-not ($branch -eq $default)) {
+                Switch-GitBranch -Name $default -Verbose:$false
             }
             Read-Repository
             (git rebase --stat) |
@@ -422,7 +449,7 @@ function Read-Repository {
         'myRepo1','myRepo2','myRepo3' | Read-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -458,7 +485,7 @@ function Update-Branch {
         git for-each-ref refs/heads --format="%(refname:short)" --sort=-committerdate | Update-Branch
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -532,7 +559,7 @@ function Update-Repository {
         'myRepo1','myRepo2','myRepo3' | Update-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -644,9 +671,9 @@ function Update-Repository {
 function Update-DevelopBranch {
     <#
         .SYNOPSIS
-        Sync 'develop' branch to 'master' branch on a specified git repository.
+        Sync 'develop' branch to default branch on a specified git repository.
         .DESCRIPTION
-        Intended to be run immediately after Read-Repository.  Read-Repository updates any and all tracking branches, this function rebases "develop" on "master".
+        Intended to be run immediately after Read-Repository.  Read-Repository updates any and all tracking branches, this function rebases "develop" on default branch.
         .INPUTS
         The repository name.
         .OUTPUTS
@@ -657,7 +684,7 @@ function Update-DevelopBranch {
         'myRepo1','myRepo2','myRepo3' | Update-Dev
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -728,6 +755,7 @@ function Update-DevelopBranch {
                     }
                 }
 
+                $default = Get-DefaultBranch
                 $branch = (Get-GitStatus -Verbose:$false).Branch
 
                 if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
@@ -737,8 +765,8 @@ function Update-DevelopBranch {
                 if (-not ($branch -eq 'develop')) {
                     Switch-GitBranch -Name 'develop' -Verbose:$false
                 }
-                (git rebase 'master' --stat) |
-                    ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git rebase "master"' -theItem $PSItem -Verbose:$false }
+                (git rebase $default --stat) |
+                    ForEach-Object -Process { Show-GitProgress -Id $Id -command "git rebase `"${default}`"" -theItem $PSItem -Verbose:$false }
                 if (-not ($branch -eq 'develop')) {
                     Switch-GitBranch -Name $branch -Verbose:$false
                 }
@@ -781,7 +809,7 @@ function Update-DevelopBranchAlt {
         'myRepo1','myRepo2','myRepo3' | Update-DevAlt
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -905,7 +933,7 @@ function Optimize-Repository {
         'myRepo1','myRepo2','myRepo3' | Optimize-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -1005,7 +1033,7 @@ function Publish-Repository {
         'myRepo1','myRepo2','myRepo3' | Pub-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -1100,7 +1128,7 @@ function Reset-RepositoryCache {
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -1197,7 +1225,7 @@ function Show-GitProgress {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE
+        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK

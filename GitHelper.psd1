@@ -19,7 +19,7 @@
     # CompanyName = 'Unknown'
 
     # Copyright statement for this module
-    Copyright = 'Copyright © 2017-2019 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/master/LICENSE'
+    Copyright = 'Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE'
 
     # Description of the functionality provided by this module
     Description = 'A PowerShell module for working with git.'
@@ -89,7 +89,7 @@
             Tags = @('git')
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/af4jm/GitHelper/blob/master/LICENSE'
+            LicenseUri = 'https://github.com/af4jm/GitHelper/blob/main/LICENSE'
 
             # A URL to the main website for this project.
             ProjectUri = 'https://github.com/af4jm/GitHelper'
@@ -98,7 +98,7 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'https://github.com/af4jm/GitHelper/blob/master/CHANGELOG.md'
+            ReleaseNotes = 'https://github.com/af4jm/GitHelper/blob/main/CHANGELOG.md'
 
         } # End of PSData hashtable
     } # End of PrivateData hashtable
