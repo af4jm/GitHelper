@@ -70,7 +70,7 @@
     VariablesToExport = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport = @('Init-Repo', 'gitdir', 'Set-Repo', 'repo', 'checkout', 'gittrack', 'gitdrop', 'pushdev', 'pushdeva', 'pulldev', 'pulldeva', 'Read-Repo', 'Update-Repo', 'Update-Dev', 'Update-DevAlt', 'Optimize-Repo', 'Pub-Repo', 'Reset-RepoCache', 'gitfix')
+    AliasesToExport = @('Init-Repo', 'gitdir', 'head', 'Set-Repo', 'repo', 'checkout', 'gittrack', 'gitdrop', 'pushdev', 'pushdeva', 'pulldev', 'pulldeva', 'Read-Repo', 'Update-Repo', 'Update-Dev', 'Update-DevAlt', 'Optimize-Repo', 'Pub-Repo', 'Reset-RepoCache', 'gitfix')
 
     # DSC resources to export from this module
     DscResourcesToExport = @()

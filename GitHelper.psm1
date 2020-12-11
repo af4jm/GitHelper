@@ -30,6 +30,9 @@ function Get-DefaultBranch {
         https://github.com/af4jm/GitHelper/
     #>
     [CmdletBinding(SupportsPaging = $false, SupportsShouldProcess = $false)]
+    [Alias('head')]
+    PARAM()
+
     BEGIN {
         (git symbolic-ref --short refs/remotes/origin/HEAD) -ireplace 'origin/',''
     }
@@ -443,10 +446,6 @@ function Read-Repository {
         You cannot pipe input to this function.
         .OUTPUTS
         Nothing is output from this function.
-        .EXAMPLE
-        Read-Repository -Name 'myRepo'
-        .EXAMPLE
-        'myRepo1','myRepo2','myRepo3' | Read-Repo
         .NOTES
         Author: John Meyer, AF4JM
         Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
