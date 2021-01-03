@@ -38,7 +38,7 @@ function Update-MyRepos
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
     #>
     [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('gall')]

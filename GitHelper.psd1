@@ -19,7 +19,7 @@
     # CompanyName = 'Unknown'
 
     # Copyright statement for this module
-    Copyright = 'Copyright © 2017-2020 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE'
+    Copyright = 'Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE'
 
     # Description of the functionality provided by this module
     Description = 'A PowerShell module for working with git.'
