@@ -375,7 +375,9 @@ function Update-Develop {
             if (-not ($branch -eq $default)) {
                 Switch-GitBranch -Name $default -Verbose:$false
             }
-            Update-Repository
+            Read-Repository
+            (git rebase --stat) |
+                ForEach-Object -Process { Show-GitProgress -Id 104 -command 'git rebase' -theItem $PSItem -Verbose:$false }
             Switch-GitBranch -Name 'develop' -Verbose:$false
             (git rebase $default --stat) |
                 ForEach-Object -Process { Show-GitProgress -Id 105 -command "git rebase `"${default}`"" -theItem $PSItem -Verbose:$false }
@@ -419,7 +421,12 @@ function Update-DevelopAlt {
             if (-not ($branch -eq $default)) {
                 Switch-GitBranch -Name $default -Verbose:$false
             }
-            Update-Repository
+            Read-Repository
+            (git rebase --stat) |
+                ForEach-Object -Process { Show-GitProgress -Id 106 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            Switch-GitBranch -Name 'development' -Verbose:$false
+            (git rebase --stat) |
+                ForEach-Object -Process { Show-GitProgress -Id 107 -command 'git rebase' -theItem $PSItem -Verbose:$false }
             Switch-GitBranch -Name 'develop' -Verbose:$false
             (git rebase 'development' --stat) |
                 ForEach-Object -Process { Show-GitProgress -Id 108 -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
