@@ -369,7 +369,7 @@ function Update-Develop {
             throw 'Not a git repository!'
         }
 
-        #if ($PSCmdlet.ShouldProcess()) {
+        if ($PSCmdlet.ShouldProcess('current repository')) {
             $default = Get-DefaultBranch
             $branch = $gitStatus.Branch
             if (-not ($branch -eq $default)) {
@@ -384,7 +384,7 @@ function Update-Develop {
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
             }
-        #}
+        }
     }
 }
 
@@ -415,7 +415,7 @@ function Update-DevelopAlt {
             throw 'Not a git repository!'
         }
 
-        if ($PSCmdlet.ShouldProcess()) {
+        if ($PSCmdlet.ShouldProcess('current repository')) {
             $default = Get-DefaultBranch
             $branch = $gitStatus.Branch
             if (-not ($branch -eq $default)) {
