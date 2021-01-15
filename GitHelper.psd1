@@ -61,7 +61,7 @@
     NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Initialize-Repository', 'Get-GitDir', 'Set-Repository', 'Switch-GitBranch', 'Add-TrackingBranch', 'Remove-Branch', 'Publish-Develop', 'Publish-DevelopAlt', 'Update-Develop', 'Update-DevelopAlt', 'Read-Repository', 'Update-Branch', 'Update-Repository', 'Update-DevelopBranch', 'Update-DevelopBranchAlt', 'Optimize-Repository', 'Publish-Repository', 'Reset-RepositoryCache')
+    FunctionsToExport = @('Initialize-Repository', 'Get-GitDir', 'Get-DefaultBranch', 'Set-Repository', 'Switch-GitBranch', 'Add-TrackingBranch', 'Remove-Branch', 'Publish-Develop', 'Publish-DevelopAlt', 'Update-Develop', 'Update-DevelopAlt', 'Read-Repository', 'Update-Branch', 'Update-Repository', 'Update-DevelopBranch', 'Update-DevelopBranchAlt', 'Optimize-Repository', 'Publish-Repository', 'Reset-RepositoryCache')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport = @()
