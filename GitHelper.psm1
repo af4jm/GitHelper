@@ -617,6 +617,8 @@ function Update-Repository {
     PROCESS {
         if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
+                Write-Verbose -Message "Getting latest for `"${name}`"."
+
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
                         Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
