@@ -631,7 +631,7 @@ function Update-Repository {
                 $branch = (Get-GitStatus -Verbose:$false).Branch
 
                 if ((-not $Reset) -and $PSCmdlet.ShouldProcess("${r}/${branch}", 'git stash create --include-untracked')) {
-                    $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
+                    $stashRef = (git stash create --include-untracked 'work in progress (GitHelper)')
                 }
 
                 # shouldn't have to pass Verbose, but if I don't it doesn't work
