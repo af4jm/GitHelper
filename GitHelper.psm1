@@ -370,11 +370,14 @@ function Update-Develop {
         }
 
         if ($PSCmdlet.ShouldProcess('current repository')) {
+            $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
+
             $default = Get-DefaultBranch
             $branch = $gitStatus.Branch
             if (-not ($branch -eq $default)) {
                 Switch-GitBranch -Name $default -Verbose:$false
             }
+
             Read-Repository
             (git rebase --stat) |
                 ForEach-Object -Process { Show-GitProgress -Id 104 -command 'git rebase' -theItem $PSItem -Verbose:$false }
@@ -383,6 +386,12 @@ function Update-Develop {
                 ForEach-Object -Process { Show-GitProgress -Id 105 -command "git rebase `"${default}`"" -theItem $PSItem -Verbose:$false }
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
+            }
+
+            if (-not $stashRef) {
+                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
+            } else {
+                git stash apply $stashRef
             }
         }
     }
@@ -416,11 +425,14 @@ function Update-DevelopAlt {
         }
 
         if ($PSCmdlet.ShouldProcess('current repository')) {
+            $stashRef = (git stash create --include-untracked "work in progress (GitHelper)")
+
             $default = Get-DefaultBranch
             $branch = $gitStatus.Branch
             if (-not ($branch -eq $default)) {
                 Switch-GitBranch -Name $default -Verbose:$false
             }
+
             Read-Repository
             (git rebase --stat) |
                 ForEach-Object -Process { Show-GitProgress -Id 106 -command 'git rebase' -theItem $PSItem -Verbose:$false }
@@ -432,6 +444,12 @@ function Update-DevelopAlt {
                 ForEach-Object -Process { Show-GitProgress -Id 108 -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
+            }
+
+            if (-not $stashRef) {
+                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
+            } else {
+                git stash apply $stashRef
             }
         }
     }
