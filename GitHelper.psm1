@@ -389,7 +389,7 @@ function Update-Develop {
             }
 
             if (-not $stashRef) {
-                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
+                Write-Verbose -Message "No changes found to stash for branch `"${branch}`", skipping `"git stash apply`"."
             } else {
                 git stash apply $stashRef
             }
@@ -447,7 +447,7 @@ function Update-DevelopAlt {
             }
 
             if (-not $stashRef) {
-                Write-Verbose -Message "No changes found to stash for `"${r}/${branch}`", skipping `"git stash apply`"."
+                Write-Verbose -Message "No changes found to stash for branch `"${branch}`", skipping `"git stash apply`"."
             } else {
                 git stash apply $stashRef
             }
