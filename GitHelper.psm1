@@ -474,6 +474,7 @@ function Read-Repository {
     #>
     [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Read-Repo')]
+    [Alias('fetch')]
     PARAM()
 
     BEGIN {
