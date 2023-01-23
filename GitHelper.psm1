@@ -293,7 +293,7 @@ function Publish-Develop {
         }
         (git rebase 'develop' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
-        (git push --tags 'origin' ':') |
+        (git push --tags 'origin' --progress ':') |
             ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push --tags "origin" ":"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq $default)) {
             Switch-GitBranch -Name $branch -Verbose:$false
@@ -334,7 +334,7 @@ function Publish-DevelopAlt {
         }
         (git rebase 'develop' --stat) |
             ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
-        (git push --tags 'origin' ':') |
+        (git push --tags 'origin' --progress ':') |
             ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push --tags "origin" ":"' -theItem $PSItem -Verbose:$false }
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name $branch -Verbose:$false
@@ -1121,7 +1121,7 @@ function Publish-Repository {
                     $gitDir = (Get-GitDir)
 
                     $command = "${gitDir}: ${theCmd}"
-                    (git push --tags --porcelain 'origin' ':') |
+                    (git push --tags --porcelain --progress 'origin' ':') |
                         ForEach-Object -Process { Show-GitProgress -Id $Id -command $command -theItem $PSItem -Verbose:$false }
                 }
             }
