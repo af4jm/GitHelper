@@ -191,9 +191,7 @@ function Switch-GitBranch {
     )
 
     BEGIN {
-        $command = "git checkout $(IIf { $Force } '--force ' '') `"${Name}`""
-        (git checkout $(IIf { $Force } '--force' $null) $Name) |
-            ForEach-Object -Process { Show-GitProgress -Id 101 -command $command -theItem $PSItem -Verbose:$false }
+        git checkout $(IIf { $Force } '--force' $null) $Name
     }
 }
 
@@ -288,13 +286,14 @@ function Publish-Develop {
 
         $default = Get-DefaultBranch
         $branch = $gitStatus.Branch
+
         if (-not ($branch -eq $default)) {
             Switch-GitBranch -Name $default -Verbose:$false
         }
-        (git rebase 'develop' --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
-        (git push --tags 'origin' --progress ':') |
-            ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push --tags "origin" ":"' -theItem $PSItem -Verbose:$false }
+
+        git rebase 'develop' --stat
+        git push --tags 'origin' --progress ':'
+
         if (-not ($branch -eq $default)) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -332,10 +331,10 @@ function Publish-DevelopAlt {
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name 'development' -Verbose:$false
         }
-        (git rebase 'develop' --stat) |
-            ForEach-Object -Process { Show-GitProgress -Id 102 -command 'git rebase "develop"' -theItem $PSItem -Verbose:$false }
-        (git push --tags 'origin' --progress ':') |
-            ForEach-Object -Process { Show-GitProgress -Id 103 -command 'git push --tags "origin" ":"' -theItem $PSItem -Verbose:$false }
+
+        git rebase 'develop' --stat
+        git push --tags 'origin' --progress ':'
+
         if (-not ($branch -eq 'development')) {
             Switch-GitBranch -Name $branch -Verbose:$false
         }
@@ -379,11 +378,10 @@ function Update-Develop {
             }
 
             Read-Repository
-            (git rebase --stat) |
-                ForEach-Object -Process { Show-GitProgress -Id 104 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            git rebase --stat
             Switch-GitBranch -Name 'develop' -Verbose:$false
-            (git rebase $default --stat) |
-                ForEach-Object -Process { Show-GitProgress -Id 105 -command "git rebase `"${default}`"" -theItem $PSItem -Verbose:$false }
+            git rebase $default --stat
+
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
             }
@@ -434,14 +432,12 @@ function Update-DevelopAlt {
             }
 
             Read-Repository
-            (git rebase --stat) |
-                ForEach-Object -Process { Show-GitProgress -Id 106 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            git rebase --stat
             Switch-GitBranch -Name 'development' -Verbose:$false
-            (git rebase --stat) |
-                ForEach-Object -Process { Show-GitProgress -Id 107 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+            git rebase --stat
             Switch-GitBranch -Name 'develop' -Verbose:$false
-            (git rebase 'development' --stat) |
-                ForEach-Object -Process { Show-GitProgress -Id 108 -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
+            git rebase 'development' --stat
+
             if (-not ($branch -eq 'develop')) {
                 Switch-GitBranch -Name $branch -Verbose:$false
             }
@@ -479,11 +475,8 @@ function Read-Repository {
 
     BEGIN {
         $gitDir = (Get-GitDir)
-        $theCmd = 'git fetch --all --tags --prune'
-        if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, $theCmd)) {
-            $command = "${gitDir}: ${theCmd}"
-            (git fetch --all --tags --prune --progress) |
-                ForEach-Object -Process { Show-GitProgress -Id 109 -command $command -theItem $PSItem -Verbose:$false }
+        if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, 'git fetch --all --tags --prune')) {
+            git fetch --all --tags --prune --progress
         }
     }
 }
@@ -542,8 +535,7 @@ function Update-Branch {
 
                 $gitStatus = (Get-GitStatus)
                 if ((($gitStatus.AheadBy -gt 0) -or ($gitStatus.BehindBy -gt 0)) -and $PSCmdlet.ShouldProcess("origin/${refname}", 'git rebase')) {
-                    (git rebase --stat) |
-                        ForEach-Object -Process { Show-GitProgress -Id 110 -command 'git rebase' -theItem $PSItem -Verbose:$false }
+                    git rebase --stat
                 }
             }
         }
@@ -785,8 +777,9 @@ function Update-DevelopBranch {
                 if (-not ($branch -eq 'develop')) {
                     Switch-GitBranch -Name 'develop' -Verbose:$false
                 }
-                (git rebase $default --stat) |
-                    ForEach-Object -Process { Show-GitProgress -Id $Id -command "git rebase `"${default}`"" -theItem $PSItem -Verbose:$false }
+
+                git rebase $default --stat
+
                 if (-not ($branch -eq 'develop')) {
                     Switch-GitBranch -Name $branch -Verbose:$false
                 }
@@ -909,8 +902,9 @@ function Update-DevelopBranchAlt {
                 if (-not ($branch -eq 'develop')) {
                     Switch-GitBranch -Name 'develop' -Verbose:$false
                 }
-                (git rebase 'development' --stat) |
-                    ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git rebase "development"' -theItem $PSItem -Verbose:$false }
+
+                git rebase 'development' --stat
+
                 if (-not ($branch -eq 'develop')) {
                     Switch-GitBranch -Name $branch -Verbose:$false
                 }
@@ -1020,8 +1014,7 @@ function Optimize-Repository {
                 }
 
                 Write-Verbose -Message "${r}: `"git gc --aggressive`""
-                (git gc --aggressive) |
-                    ForEach-Object -Process { Show-GitProgress -Id $Id -command 'git gc --aggressive' -theItem $PSItem -Verbose:$false }
+                git gc --aggressive
             }
         }
 
@@ -1114,15 +1107,10 @@ function Publish-Repository {
                     }
                 }
 
-                $theCmd = 'git push --tags "origin" ":"'
                 if ($WhatIfPreference) {
                     git push --tags --porcelain --dry-run 'origin' ':'
-                } elseif ($PSCmdlet.ShouldProcess($r, $theCmd)) {
-                    $gitDir = (Get-GitDir)
-
-                    $command = "${gitDir}: ${theCmd}"
-                    (git push --tags --porcelain --progress 'origin' ':') |
-                        ForEach-Object -Process { Show-GitProgress -Id $Id -command $command -theItem $PSItem -Verbose:$false }
+                } elseif ($PSCmdlet.ShouldProcess($r, 'git push --tags "origin" ":"')) {
+                    git push --tags --porcelain --progress 'origin' ':'
                 }
             }
         }
@@ -1214,10 +1202,8 @@ function Reset-RepositoryCache {
                     git rm --cached -r .
                 }
 
-                $theCmd = 'git reset --hard'
-                if ($PSCmdlet.ShouldProcess($r, $theCmd)) {
-                    (git reset --hard) |
-                        ForEach-Object -Process { Show-GitProgress -Id $Id -command $theCmd -theItem $PSItem -Verbose:$false }
+                if ($PSCmdlet.ShouldProcess($r, 'git reset --hard')) {
+                    git reset --hard
                 }
             }
         }
@@ -1229,64 +1215,5 @@ function Reset-RepositoryCache {
 
     END {
         Pop-Location
-    }
-}
-
-
-function Show-GitProgress {
-    <#
-        .SYNOPSIS
-        Update a progress bar for a git operation.
-        .DESCRIPTION
-        Update a progress bar for a git operation.  Anything not parsable as progress is written to standard output.
-        .INPUTS
-        You cannot pipe input to this function.
-        .OUTPUTS
-        Nothing is output from this function.
-        .NOTES
-        Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
-        .LINK
-        https://www.powershellgallery.com/packages/GitHelper/
-        .LINK
-        https://github.com/af4jm/GitHelper/
-    #>
-    [CmdletBinding(ConfirmImpact = 'Low', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $false)]
-    PARAM(
-        #output from git to parse for progress
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = '$theItem must be specified')]
-        [Object[]]$theItem,
-
-        #command to display for the progress bar
-        [Parameter()]
-        [string]$command,
-
-        #command to display for the progress bar
-        [Parameter()]
-        [int]$Id = 1
-    )
-
-    PROCESS {
-        foreach ($i in $theItem) {
-            $item = $i.ToString()
-            $parsed = $item -split { $PSItem -eq '(' -or $PSItem -eq '/' -or $PSItem -eq ')' }
-            if ($item.Contains('done') -or $item.Contains('complete')) {
-                Write-Progress -Id $Id -Activity $command -SecondsRemaining 0 -PercentComplete 100
-                Write-Progress -Id $Id -Activity $command -SecondsRemaining (-1) -PercentComplete (-1) -Complete:$true
-                Out-Host -InputObject $item
-            } elseif ($parsed.Length -eq 4) {
-                try {
-                    # calculate the %
-                    $pct = [int]((([double]$parsed[1]) / ([double]$parsed[2])) * 100)
-                    $progress = $item -split ':', 2
-                    Write-Progress -Id $Id -Activity $command -CurrentOperation $progress[0] -Status $progress[1] -SecondsRemaining (-1) -PercentComplete $pct
-                } catch {
-                    # calculation failed, just display the message
-                    Out-Host -InputObject $item
-                }
-            } else {
-                Out-Host -InputObject $item
-            }
-        }
     }
 }
