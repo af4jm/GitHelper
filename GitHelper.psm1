@@ -750,14 +750,11 @@ function Update-DevelopBranch {
             ${Local:ErrorView} = ${Global:ErrorView}
             ${Global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
-
-        $Id = 12
     }
 
     PROCESS {
         if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
-                $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
                         Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
@@ -876,14 +873,11 @@ function Update-DevelopBranchAlt {
             ${Local:ErrorView} = ${Global:ErrorView}
             ${Global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
-
-        $Id = 12
     }
 
     PROCESS {
         if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
-                $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
                         Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
@@ -996,14 +990,11 @@ function Optimize-Repository {
             ${Local:ErrorView} = ${Global:ErrorView}
             ${Global:ErrorView} = 'CategoryView' # better display in alternate shells for git dumping status to stderr instead of stdout
         }
-
-        $Id = 34
     }
 
     PROCESS {
         if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
-                $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
                         Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
@@ -1091,13 +1082,11 @@ function Publish-Repository {
         }
 
         Push-Location
-        $Id = 56
     }
 
     PROCESS {
         if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
-                $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
                         Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
@@ -1182,13 +1171,11 @@ function Reset-RepositoryCache {
         }
 
         Push-Location
-        $Id = 78
     }
 
     PROCESS {
         if (($Name) -and ($Name.Length -gt 0)) {
             foreach ($r in $Name) {
-                $Id += 1
                 switch ($PSCmdlet.ParameterSetName) {
                     'Path' {
                         Set-Location -Path (Join-Path -Path $ThePath -ChildPath $r)
