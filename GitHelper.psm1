@@ -23,7 +23,7 @@ function Get-DefaultBranch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -49,7 +49,7 @@ function Initialize-Repository {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -80,7 +80,7 @@ function Get-GitDir {
         If the current location is in a git repository, the name of the parent folder; otherwise, $null.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -115,7 +115,7 @@ function Set-Repository {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -161,6 +161,37 @@ function Set-Repository {
 }
 
 
+function Update-All {
+    <#
+        .SYNOPSIS
+        Stage & commit all files, including new files.
+        .INPUTS
+        You cannot pipe input to this function.
+        .OUTPUTS
+        Nothing is output from this function.
+        .NOTES
+        Author: John Meyer, AF4JM
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        .LINK
+        https://www.powershellgallery.com/packages/GitHelper/
+        .LINK
+        https://github.com/af4jm/GitHelper/
+    #>
+    [CmdletBinding(ConfirmImpact = 'Low', DefaultParameterSetName = 'Path', PositionalBinding = $true, SupportsPaging = $false, SupportsShouldProcess = $true)]
+    [Alias('commit')]
+    PARAM(
+        #commit message
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromRemainingArguments = $true, Position = 0, HelpMessage = 'Commit message must be specified')]
+        [string]$Message
+    )
+
+    BEGIN {
+        git add --all
+        git commit "--message=${Message}"
+    }
+}
+
+
 function Switch-GitBranch {
     <#
         .SYNOPSIS
@@ -171,7 +202,7 @@ function Switch-GitBranch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -206,7 +237,7 @@ function Add-TrackingBranch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -236,7 +267,7 @@ function Remove-Branch {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -268,7 +299,7 @@ function Publish-Develop {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -311,7 +342,7 @@ function Publish-DevelopAlt {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -352,7 +383,7 @@ function Update-Develop {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -406,7 +437,7 @@ function Update-DevelopAlt {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -462,7 +493,7 @@ function Read-Repository {
         Nothing is output from this function.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -496,7 +527,7 @@ function Update-Branch {
         git for-each-ref refs/heads --format="%(refname:short)" --sort=-committerdate | Update-Branch
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -569,7 +600,7 @@ function Update-Repository {
         'myRepo1','myRepo2','myRepo3' | Update-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -696,7 +727,7 @@ function Update-DevelopBranch {
         'myRepo1','myRepo2','myRepo3' | Update-Dev
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -819,7 +850,7 @@ function Update-DevelopBranchAlt {
         'myRepo1','myRepo2','myRepo3' | Update-DevAlt
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -941,7 +972,7 @@ function Optimize-Repository {
         'myRepo1','myRepo2','myRepo3' | Optimize-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -1037,7 +1068,7 @@ function Publish-Repository {
         'myRepo1','myRepo2','myRepo3' | Pub-Repo
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
@@ -1125,7 +1156,7 @@ function Reset-RepositoryCache {
         Pipeline input, if -PassThru is $true; otherwise this function does not generate any output.
         .NOTES
         Author: John Meyer, AF4JM
-        Copyright © 2017-2021 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
+        Copyright © 2017-2023 John Meyer, AF4JM. Licensed under the MIT License. https://github.com/af4jm/GitHelper/blob/main/LICENSE
         .LINK
         https://www.powershellgallery.com/packages/GitHelper/
         .LINK
