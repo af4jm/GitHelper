@@ -409,7 +409,7 @@ function Update-Develop {
                 Switch-GitBranch -Name $default -Verbose:$false
             }
 
-            Read-Repository
+            Read-Repository --Depth=25
             git rebase --stat
             Switch-GitBranch -Name 'develop' -Verbose:$false
             git rebase $default --stat
@@ -503,12 +503,20 @@ function Read-Repository {
     [CmdletBinding(ConfirmImpact = 'Low', SupportsPaging = $false, SupportsShouldProcess = $true)]
     [Alias('Read-Repo')]
     [Alias('fetch')]
-    PARAM()
+    PARAM(
+        #fetch --depth
+        [Parameter(Mandatory = $false)]
+        [int]$Depth = $null
+    )
 
     BEGIN {
         $gitDir = (Get-GitDir)
         if (($gitDir) -and $PSCmdlet.ShouldProcess($gitDir, 'git fetch --all --tags --prune')) {
-            git fetch --all --tags --prune --progress
+            if ($Depth) {
+                git fetch --all --depth=$Depth --tags --prune --progress
+            } else {
+                git fetch --all --tags --prune --progress
+            }
         }
     }
 }
