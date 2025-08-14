@@ -409,7 +409,7 @@ function Update-Develop {
                 Switch-GitBranch -Name $default -Verbose:$false
             }
 
-            Read-Repository --Depth=25
+            Read-Repository -Depth 25
             git rebase --stat
             Switch-GitBranch -Name 'develop' -Verbose:$false
             git rebase $default --stat
